@@ -69,9 +69,18 @@ public class MainFrame extends JFrame {
 				Boolean isUser = User.checkUser(id, username, role);
 				if (isUser) {
 					loginAttempt.setText("Success");
+					if (role == Role.customer) {
+						customerFrame frame = new customerFrame();
+						frame.setVisible(true);
+						setVisible(false);
+					} else if (role == Role.admin){
+						adminFrame frame = new adminFrame();
+						frame.setVisible(true);
+						setVisible(false);
 				} else {
 					loginAttempt.setText("Failed");
 
+				}
 				}
 				
 			}
