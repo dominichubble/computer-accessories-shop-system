@@ -71,11 +71,11 @@ public class MainFrame extends JFrame {
 					if (role == Role.customer) {
 						customerFrame frame = new customerFrame();
 						frame.setVisible(true);
-						setVisible(false);
+						dispose();
 					} else if (role == Role.admin){
 						adminFrame frame = new adminFrame();
 						frame.setVisible(true);
-						setVisible(false);
+						dispose();
 				} 
 				else {
 					
