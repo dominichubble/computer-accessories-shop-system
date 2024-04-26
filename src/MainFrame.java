@@ -68,7 +68,6 @@ public class MainFrame extends JFrame {
 				Role role = (Role) roles.getSelectedItem();
 				Boolean isUser = User.checkUser(id, username, role);
 				if (isUser) {
-					loginAttempt.setText("Success");
 					if (role == Role.customer) {
 						customerFrame frame = new customerFrame();
 						frame.setVisible(true);
@@ -77,12 +76,11 @@ public class MainFrame extends JFrame {
 						adminFrame frame = new adminFrame();
 						frame.setVisible(true);
 						setVisible(false);
-				} else {
-					loginAttempt.setText("Failed");
-
+				} 
+				else {
+					
 				}
 				}
-				
 			}
 		});
 		btnLogin.setBounds(172, 146, 89, 23);
@@ -103,12 +101,6 @@ public class MainFrame extends JFrame {
 		roles = new JComboBox<>(Role.values());
 		roles.setBounds(172, 86, 86, 22);
 		contentPane.add(roles);
-		
-		loginAttempt = new JLabel("Success");
-		loginAttempt.setEnabled(false);
-		loginAttempt.setBounds(271, 150, 46, 14);
-		contentPane.add(loginAttempt);
-		
 		
 
 		
