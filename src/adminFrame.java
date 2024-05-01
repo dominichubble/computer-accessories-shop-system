@@ -268,8 +268,8 @@ public class adminFrame extends JFrame {
     } else {
         return; // Optionally handle error or unsupported product types
     }
-
-    StockManager.addOrUpdateProduct(product);
+    StockManager stockManager = new StockManager("data/Stock.txt");
+    stockManager.addOrUpdateProduct(product);
 }
 
 }
