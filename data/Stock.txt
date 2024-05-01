@@ -13,3 +13,4 @@
 237788, keyboard, STANDARD, Logitech, grey, wired, 15, 6.50, 8.99, UK
 237799, mouse, standard, Logitech, grey, wireless, 13, 7.00, 8.00, 2
 238800, keyboard, FLEXIBLE, Microsoft, black, wired, 10, 26.50, 30.00, US
+238807, keyboard, STANDARD, log, green, wired, 4, 8.00, 4.00, UK

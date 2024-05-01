@@ -55,7 +55,7 @@ public class adminFrame extends JFrame {
 	 */
 	public adminFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 1024, 576);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -70,148 +70,148 @@ public class adminFrame extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		logout.setBounds(324, 11, 89, 23);
+		logout.setBounds(894, 23, 89, 23);
 		contentPane.add(logout);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(10, 47, 403, 203);
+		tabbedPane.setBounds(10, 45, 988, 479);
 		contentPane.add(tabbedPane);
+
+		dtmProducts = new DefaultTableModel();
+		dtmProducts.setColumnIdentifiers(new String[]{"Barcode", "Category", "Type", "Brand", "Colour", "Connectivity", "Stock", "Cost", "Price", "Info"});
 		
 		JPanel viewProducts = new JPanel();
 		tabbedPane.addTab("View Products", null, viewProducts, null);
 		viewProducts.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 279, 153);
+		scrollPane.setBounds(10, 11, 864, 429);
 		viewProducts.add(scrollPane);
 		
 		tblProducts = new JTable();
 		scrollPane.setViewportView(tblProducts);
-
-		dtmProducts = new DefaultTableModel();
-		dtmProducts.setColumnIdentifiers(new String[]{"Barcode", "Category", "Type", "Brand", "Colour", "Connectivity", "Stock", "Cost", "Price", "Info"});
 		tblProducts.setModel(dtmProducts);
+		
+				
+				JButton btnView = new JButton("View");
+				btnView.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						populateTable();
+					}
+				});
+				btnView.setBounds(884, 11, 89, 72);
+				viewProducts.add(btnView);
+				
+						JPanel addProduct = new JPanel();
+						tabbedPane.addTab("Add Product", null, addProduct, null);
+						addProduct.setLayout(null);
+						
+						barcodeInput = new JTextField();
+						barcodeInput.setBounds(77, 11, 120, 50);
+						addProduct.add(barcodeInput);
+						barcodeInput.setColumns(10);
+						
+						JComboBox categoryInput = new JComboBox(ProductCategory.values());
+						categoryInput.setBounds(311, 11, 120, 50);
+						addProduct.add(categoryInput);
+						
+						JComboBox typeInput = new JComboBox(DeviceType.values());
+						typeInput.setBounds(538, 11, 120, 50);
+						addProduct.add(typeInput);
+						
+						brandInput = new JTextField();
+						brandInput.setBounds(77, 113, 120, 50);
+						addProduct.add(brandInput);
+						brandInput.setColumns(10);
+						
+						colourInput = new JTextField();
+						colourInput.setBounds(757, 11, 120, 50);
+						addProduct.add(colourInput);
+						colourInput.setColumns(10);
+						
+						JComboBox connectivityInput = new JComboBox(ConnectivityType.values());
+						connectivityInput.setBounds(311, 113, 120, 50);
+						addProduct.add(connectivityInput);
+						
+						stockInput = new JTextField();
+						stockInput.setBounds(538, 113, 120, 50);
+						addProduct.add(stockInput);
+						stockInput.setColumns(10);
+						
+						costInput = new JTextField();
+						costInput.setBounds(757, 113, 120, 50);
+						addProduct.add(costInput);
+						costInput.setColumns(10);
+						
+						priceInput = new JTextField();
+						priceInput.setBounds(77, 212, 120, 50);
+						addProduct.add(priceInput);
+						priceInput.setColumns(10);
+						
+						JButton productEnter = new JButton("Submit");
+						productEnter.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								int barcode = Integer.parseInt(barcodeInput.getText());
+								ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
+								DeviceType type = (DeviceType) typeInput.getSelectedItem();
+								String brand = brandInput.getText();
+								String colour = colourInput.getText();
+								ConnectivityType connectivity = (ConnectivityType) connectivityInput.getSelectedItem();
+								int stock = Integer.parseInt(stockInput.getText());
+								double cost = Double.parseDouble(costInput.getText());
+								double price = Double.parseDouble(priceInput.getText());
+								String additionalInfo = infoInput.getText();
+								addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type, additionalInfo);
 
-		
-		JButton btnView = new JButton("View");
-		btnView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				populateTable();
-			}
-		});
-		btnView.setBounds(299, 11, 89, 23);
-		viewProducts.add(btnView);
-
-		JPanel addProduct = new JPanel();
-		tabbedPane.addTab("Add Product", null, addProduct, null);
-		addProduct.setLayout(null);
-		
-		barcodeInput = new JTextField();
-		barcodeInput.setBounds(88, 11, 86, 20);
-		addProduct.add(barcodeInput);
-		barcodeInput.setColumns(10);
-		
-		JComboBox categoryInput = new JComboBox(ProductCategory.values());
-		categoryInput.setBounds(233, 10, 86, 22);
-		addProduct.add(categoryInput);
-		
-		JComboBox typeInput = new JComboBox(DeviceType.values());
-		typeInput.setBounds(88, 42, 86, 22);
-		addProduct.add(typeInput);
-		
-		brandInput = new JTextField();
-		brandInput.setBounds(233, 43, 86, 20);
-		addProduct.add(brandInput);
-		brandInput.setColumns(10);
-		
-		colourInput = new JTextField();
-		colourInput.setBounds(88, 75, 86, 20);
-		addProduct.add(colourInput);
-		colourInput.setColumns(10);
-		
-		JComboBox connectivityInput = new JComboBox(ConnectivityType.values());
-		connectivityInput.setBounds(233, 74, 86, 22);
-		addProduct.add(connectivityInput);
-		
-		stockInput = new JTextField();
-		stockInput.setBounds(88, 106, 86, 20);
-		addProduct.add(stockInput);
-		stockInput.setColumns(10);
-		
-		costInput = new JTextField();
-		costInput.setBounds(233, 107, 86, 20);
-		addProduct.add(costInput);
-		costInput.setColumns(10);
-		
-		priceInput = new JTextField();
-		priceInput.setBounds(88, 137, 86, 20);
-		addProduct.add(priceInput);
-		priceInput.setColumns(10);
-		
-		JButton productEnter = new JButton("Submit");
-		productEnter.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int barcode = Integer.parseInt(barcodeInput.getText());
-				ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
-				DeviceType type = (DeviceType) typeInput.getSelectedItem();
-				String brand = brandInput.getText();
-				String colour = colourInput.getText();
-				ConnectivityType connectivity = (ConnectivityType) connectivityInput.getSelectedItem();
-				int stock = Integer.parseInt(stockInput.getText());
-				double cost = Double.parseDouble(costInput.getText());
-				double price = Double.parseDouble(priceInput.getText());
-				String additionalInfo = infoInput.getText();
-				addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type, additionalInfo);
-
-			}
-		});
-		productEnter.setBounds(185, 136, 35, 23);
-		addProduct.add(productEnter);
-		
-		JLabel txtBarcode = new JLabel("Barcode");
-		txtBarcode.setBounds(10, 14, 46, 14);
-		addProduct.add(txtBarcode);
-		
-		JLabel txtType = new JLabel("Type");
-		txtType.setBounds(10, 46, 46, 14);
-		addProduct.add(txtType);
-		
-		JLabel txtColour = new JLabel("Colour");
-		txtColour.setBounds(10, 78, 46, 14);
-		addProduct.add(txtColour);
-		
-		JLabel txtStock = new JLabel("Stock");
-		txtStock.setBounds(10, 109, 46, 14);
-		addProduct.add(txtStock);
-		
-		JLabel txtRetailPrice = new JLabel("Price");
-		txtRetailPrice.setBounds(10, 140, 46, 14);
-		addProduct.add(txtRetailPrice);
-		
-		JLabel txtCategory = new JLabel("Category");
-		txtCategory.setBounds(342, 14, 46, 14);
-		addProduct.add(txtCategory);
-		
-		JLabel txtBrand = new JLabel("Brand");
-		txtBrand.setBounds(342, 46, 46, 14);
-		addProduct.add(txtBrand);
-		
-		JLabel txtConnectivity = new JLabel("Connectivity");
-		txtConnectivity.setBounds(342, 78, 46, 14);
-		addProduct.add(txtConnectivity);
-		
-		JLabel txrOriginalCost = new JLabel("Cost");
-		txrOriginalCost.setBounds(342, 109, 46, 14);
-		addProduct.add(txrOriginalCost);
-		
-		infoInput = new JTextField();
-		infoInput.setBounds(233, 137, 86, 20);
-		addProduct.add(infoInput);
-		infoInput.setColumns(10);
-		
-		JLabel txtInfo = new JLabel("Info");
-		txtInfo.setBounds(342, 140, 46, 14);
-		addProduct.add(txtInfo);
+							}
+						});
+						productEnter.setBounds(539, 208, 338, 58);
+						addProduct.add(productEnter);
+						
+						JLabel txtBarcode = new JLabel("Barcode");
+						txtBarcode.setBounds(21, 26, 46, 14);
+						addProduct.add(txtBarcode);
+						
+						JLabel txtType = new JLabel("Type");
+						txtType.setBounds(494, 26, 46, 14);
+						addProduct.add(txtType);
+						
+						JLabel txtColour = new JLabel("Colour");
+						txtColour.setBounds(701, 29, 46, 14);
+						addProduct.add(txtColour);
+						
+						JLabel txtStock = new JLabel("Stock");
+						txtStock.setBounds(494, 131, 46, 14);
+						addProduct.add(txtStock);
+						
+						JLabel txtRetailPrice = new JLabel("Price");
+						txtRetailPrice.setBounds(21, 230, 46, 14);
+						addProduct.add(txtRetailPrice);
+						
+						JLabel txtCategory = new JLabel("Category");
+						txtCategory.setBounds(233, 29, 46, 14);
+						addProduct.add(txtCategory);
+						
+						JLabel txtBrand = new JLabel("Brand");
+						txtBrand.setBounds(21, 131, 46, 14);
+						addProduct.add(txtBrand);
+						
+						JLabel txtConnectivity = new JLabel("Connectivity");
+						txtConnectivity.setBounds(237, 131, 64, 14);
+						addProduct.add(txtConnectivity);
+						
+						JLabel txrOriginalCost = new JLabel("Cost");
+						txrOriginalCost.setBounds(701, 131, 46, 14);
+						addProduct.add(txrOriginalCost);
+						
+						infoInput = new JTextField();
+						infoInput.setBounds(311, 212, 120, 50);
+						addProduct.add(infoInput);
+						infoInput.setColumns(10);
+						
+						JLabel txtInfo = new JLabel("Info");
+						txtInfo.setBounds(268, 230, 46, 14);
+						addProduct.add(txtInfo);
 
 		
 	}
