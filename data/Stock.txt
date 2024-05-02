@@ -18,3 +18,4 @@
 123, keyboard, GAMING, kj, kj, wired, 6, 7.00, 6.00, UK
 999999, mouse, standard, cors, red, wired, 8, 6.00, 6.00, 8
 121212, keyboard, GAMING, log, Black, wired, 5, 9.00, 9.00, UK
+321333, keyboard, GAMING, Log, Blue, wired, 3, 8.00, 8.00, UK
