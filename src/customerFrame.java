@@ -36,7 +36,7 @@ public class CustomerFrame extends JFrame {
 	 */
 	public CustomerFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 1024, 576);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -51,11 +51,11 @@ public class CustomerFrame extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		logout.setBounds(324, 11, 89, 23);
+		logout.setBounds(894, 23, 89, 23);
 		contentPane.add(logout);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(10, 47, 403, 203);
+		tabbedPane.setBounds(10, 45, 988, 479);
 		contentPane.add(tabbedPane);
 		
 		JPanel panel = new JPanel();

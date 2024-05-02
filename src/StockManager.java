@@ -3,6 +3,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -55,6 +57,15 @@ public class StockManager {
 		return null;
 	}
 
+	public void sortProductsByPrice() {
+		Collections.sort(products, new Comparator<Product>() {
+			@Override
+			public int compare(Product p1, Product p2) {
+				return Double.compare(p1.getRetailPrice(), p2.getRetailPrice());
+			}
+		});
+	}
+
 	public void addOrUpdateProduct(Product product) {
 		int index = findProductIndexByBarcode(product.getBarcode());
 		if (index != -1) {
@@ -62,6 +73,7 @@ public class StockManager {
 		} else {
 			products.add(product); // Add new product if not found
 		}
+		sortProductsByPrice();
 		saveProducts();
 	}
 

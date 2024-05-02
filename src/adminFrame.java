@@ -147,51 +147,50 @@ public class AdminFrame extends JFrame {
 
 		JButton productEnter = new JButton("Submit");
 		productEnter.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if (barcodeInput.getText().trim().isEmpty() || stockInput.getText().trim().isEmpty()
-							|| costInput.getText().trim().isEmpty() || priceInput.getText().trim().isEmpty()) {
-						JOptionPane.showMessageDialog(null,
-								"Please fill in all required fields correctly. Numeric fields must contain numbers.",
-								"Input Error", JOptionPane.ERROR_MESSAGE);
-						return; // Exit the method if any field is empty or incorrectly formatted
-					}
+    public void actionPerformed(ActionEvent e) {
+        try {
+            // Validate that all required fields are filled
+            if (barcodeInput.getText().trim().isEmpty() ||
+                stockInput.getText().trim().isEmpty() ||
+                costInput.getText().trim().isEmpty() ||
+                priceInput.getText().trim().isEmpty() ||
+                brandInput.getText().trim().isEmpty() ||
+                colourInput.getText().trim().isEmpty() ||
+                infoInput.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "All fields must be filled.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-					String barcodeStr = barcodeInput.getText().trim();
-					if (!barcodeStr.matches("\\d{6}")) {
-						JOptionPane.showMessageDialog(null, "Barcode must be exactly 6 digits.", "Input Error",
-								JOptionPane.ERROR_MESSAGE);
-						return; // Exit if the barcode is not exactly six digits
-					}
-					int barcode = Integer.parseInt(barcodeStr);
+            String additionalInfo = infoInput.getText().trim().toUpperCase();
+            ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
 
-					int stock = Integer.parseInt(stockInput.getText().trim());
-					double cost = Double.parseDouble(costInput.getText().trim());
-					double price = Double.parseDouble(priceInput.getText().trim());
+            // Check for Keyboard category and validate infoInput
+            if (category == ProductCategory.KEYBOARD && !(additionalInfo.equals("UK") || additionalInfo.equals("US"))) {
+                JOptionPane.showMessageDialog(null, "For keyboards, the Info must be either 'UK' or 'US'.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-					String brand = brandInput.getText().trim();
-					String colour = colourInput.getText().trim();
-					ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
-					DeviceType type = (DeviceType) typeInput.getSelectedItem();
-					ConnectivityType connectivity = (ConnectivityType) connectivityInput.getSelectedItem();
-					String additionalInfo = infoInput.getText().trim();
+            // Assuming other validations and parsing are successful
+            int barcode = Integer.parseInt(barcodeInput.getText().trim());
+            int stock = Integer.parseInt(stockInput.getText().trim());
+            double cost = Double.parseDouble(costInput.getText().trim());
+            double price = Double.parseDouble(priceInput.getText().trim());
+            String brand = brandInput.getText().trim();
+            String colour = colourInput.getText().trim();
+            DeviceType type = (DeviceType) typeInput.getSelectedItem();
+            ConnectivityType connectivity = (ConnectivityType) connectivityInput.getSelectedItem();
 
-					addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type,
-							additionalInfo);
+            // Proceed to add or update the product
+            addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type, additionalInfo);
+            JOptionPane.showMessageDialog(null, "Product successfully updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-					// Display success message
-					JOptionPane.showMessageDialog(null, "Product list successfully updated!", "Success",
-							JOptionPane.INFORMATION_MESSAGE);
-
-				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(null, "Please enter valid numeric values.", "Number Format Error",
-							JOptionPane.ERROR_MESSAGE);
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Unexpected error: " + ex.getMessage(), "Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Please enter valid numeric values for Barcode, Stock, Cost, and Price.", "Number Format Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Unexpected error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+});
 
 		productEnter.setBounds(539, 208, 338, 58);
 		addProduct.add(productEnter);
@@ -282,7 +281,6 @@ public class AdminFrame extends JFrame {
 		} else {
 			return; // Optionally handle error or unsupported product types
 		}
-
 		StockManager stockManager = new StockManager("data/Stock.txt");
 		stockManager.addOrUpdateProduct(product);
 	}
