@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 public class adminFrame extends JFrame {
 
@@ -161,10 +162,56 @@ public class adminFrame extends JFrame {
 								double cost = Double.parseDouble(costInput.getText());
 								double price = Double.parseDouble(priceInput.getText());
 								String additionalInfo = infoInput.getText();
+								
 								addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type, additionalInfo);
+								
 
 							}
 						});
+						
+						productEnter.addActionListener(new ActionListener() {
+						    public void actionPerformed(ActionEvent e) {
+						        try {
+						            // Check if any critical numeric field is empty before parsing
+						            if (barcodeInput.getText().trim().isEmpty() || 
+						                stockInput.getText().trim().isEmpty() || 
+						                costInput.getText().trim().isEmpty() || 
+						                priceInput.getText().trim().isEmpty()) {
+						                JOptionPane.showMessageDialog(null, "Please fill in all required fields correctly. Numeric fields must contain numbers.", "Input Error", JOptionPane.ERROR_MESSAGE);
+						                return; // Exit the method if any field is empty or incorrectly formatted
+						            }
+
+						            // Validate the barcode length and format
+						            String barcodeStr = barcodeInput.getText().trim();
+						            if (!barcodeStr.matches("\\d{6}")) {
+						                JOptionPane.showMessageDialog(null, "Barcode must be exactly 6 digits.", "Input Error", JOptionPane.ERROR_MESSAGE);
+						                return; // Exit if the barcode is not exactly six digits
+						            }
+						            int barcode = Integer.parseInt(barcodeStr); // Now safely parse the barcode
+
+						            // Parse other numeric fields safely
+						            int stock = Integer.parseInt(stockInput.getText().trim());
+						            double cost = Double.parseDouble(costInput.getText().trim());
+						            double price = Double.parseDouble(priceInput.getText().trim());
+
+						            // Continue with other fields
+						            String brand = brandInput.getText().trim();
+						            String colour = colourInput.getText().trim();
+						            String additionalInfo = infoInput.getText().trim();
+						            ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
+						            DeviceType type = (DeviceType) typeInput.getSelectedItem();
+						            ConnectivityType connectivity = (ConnectivityType) connectivityInput.getSelectedItem();
+
+						            // Proceed to add or update the product
+						            addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type, additionalInfo);
+						        } catch (NumberFormatException ex) {
+						            JOptionPane.showMessageDialog(null, "Please enter valid numeric values.", "Number Format Error", JOptionPane.ERROR_MESSAGE);
+						        } catch (Exception ex) {
+						            JOptionPane.showMessageDialog(null, "Unexpected error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						        }
+						    }
+						});
+
 						productEnter.setBounds(539, 208, 338, 58);
 						addProduct.add(productEnter);
 						
@@ -249,10 +296,11 @@ public class adminFrame extends JFrame {
 	            product.getRetailPrice(),
 	            additionalInfo
 	        });
+	    }
 
 
 	    }
-	}
+
 	public void addOrUpdateProduct(int barcode, String brand, String color, ConnectivityType connectivity,
                                int quantity, double cost, double price, ProductCategory category,
                                DeviceType type, String additionalInfo) {
@@ -268,6 +316,9 @@ public class adminFrame extends JFrame {
     } else {
         return; // Optionally handle error or unsupported product types
     }
+
+	
+
     StockManager stockManager = new StockManager("data/Stock.txt");
     stockManager.addOrUpdateProduct(product);
 }
