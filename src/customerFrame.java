@@ -2,11 +2,13 @@
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -22,6 +24,8 @@ public class CustomerFrame extends JFrame {
 	private JTable tblProducts;
 	private DefaultTableModel dtmProducts;
 	private JTextField barcodeInput;
+	private JTextField quantityInput;
+	private List<BasketItem> basket = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -105,8 +109,49 @@ public class CustomerFrame extends JFrame {
 		panelShop.add(txtInsertBarcode);
 
 		JButton btnAddToBasket = new JButton("Add To Basket");
-		btnAddToBasket.setBounds(10, 307, 107, 23);
+		btnAddToBasket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (barcodeInput.getText().isEmpty() || quantityInput.getText().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					int barcode = Integer.parseInt(barcodeInput.getText());
+					int quantity = Integer.parseInt(quantityInput.getText());
+					int price = StockReader.getPrice(barcode);
+					if (!StockReader.checkIfBarcodeExists(barcode)) {
+						JOptionPane.showMessageDialog(null, "Barcode does not exist!", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					if (quantity <= 0) {
+						JOptionPane.showMessageDialog(null, "Invalid quantity!", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					if (BasketItem.checkIfInStock(barcode, quantity)) {
+						BasketItem basketItem = new BasketItem(barcode, quantity, price);
+						basket.add(basketItem);
+						JOptionPane.showMessageDialog(null, "Added to basket!", "Success", JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(null, "Not enough in stock!", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		btnAddToBasket.setBounds(10, 344, 107, 23);
 		panelShop.add(btnAddToBasket);
+
+		quantityInput = new JTextField();
+		quantityInput.setBounds(10, 307, 86, 20);
+		panelShop.add(quantityInput);
+		quantityInput.setColumns(10);
+
+		JLabel txtInsertQuantity = new JLabel("(insert quantity)");
+		txtInsertQuantity.setBounds(106, 310, 89, 14);
+		panelShop.add(txtInsertQuantity);
 
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("New tab", null, panel_1, null);

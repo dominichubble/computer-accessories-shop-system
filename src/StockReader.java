@@ -52,4 +52,34 @@ public class StockReader {
 	private static void sortProductsByPrice(List<Product> products) {
 		products.sort(Comparator.comparingDouble(Product::getRetailPrice));
 	}
+
+	public static int getPrice(int barcode) {
+		List<Product> products = readStockFile("data/Stock.txt");
+		for (Product product : products) {
+			if (product.getBarcode() == barcode) {
+				return (int) product.getRetailPrice();
+			}
+		}
+		return 0;
+	}
+
+	public static int getQuantityInStock(int barcode) {
+		List<Product> products = readStockFile("data/Stock.txt");
+		for (Product product : products) {
+			if (product.getBarcode() == barcode) {
+				return product.getQuantityInStock();
+			}
+		}
+		return 0;
+	}
+
+	public static Boolean checkIfBarcodeExists(int barcode) {
+		List<Product> products = readStockFile("data/Stock.txt");
+		for (Product product : products) {
+			if (product.getBarcode() == barcode) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
