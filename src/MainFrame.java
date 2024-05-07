@@ -64,38 +64,16 @@ public class MainFrame extends JFrame {
 				try {
 					String idStr = idInput.getText().trim();
 					String username = usernameInput.getText().trim();
-
-					// Check for empty inputs
-					if (idStr.isEmpty() || username.isEmpty()) {
-						JOptionPane.showMessageDialog(MainFrame.this, "ID and Username cannot be empty.", "Login Error",
-								JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-
-					int id = Integer.parseInt(idStr); // This might throw NumberFormatException if not a valid integer
 					Role role = (Role) roles.getSelectedItem();
-
-					Boolean isUser = User.checkUser(id, username, role);
-					if (!isUser) {
-						JOptionPane.showMessageDialog(MainFrame.this, "Login failed. Please check your credentials.",
-								"Login Error", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-
-					// Successful login, navigate based on role
-					if (role == Role.customer) {
-						CustomerFrame frame = new CustomerFrame();
-						frame.setVisible(true);
-						dispose();
-					} else if (role == Role.admin) {
-						AdminFrame frame = new AdminFrame();
-						frame.setVisible(true);
+					User user = new User(idStr, username, role);
+					if(User.login()) {
 						dispose();
 					}
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(MainFrame.this, "Please enter a valid ID.", "Input Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
+
 			}
 		});
 		btnLogin.setBounds(172, 146, 89, 23);

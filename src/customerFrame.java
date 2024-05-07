@@ -23,9 +23,16 @@ public class CustomerFrame extends JFrame {
 	private JPanel contentPane;
 	private JTable tblProducts;
 	private DefaultTableModel dtmProducts;
+	private DefaultTableModel dtmBasketItems;
 	private JTextField barcodeInput;
 	private JTextField quantityInput;
-	private List<BasketItem> basket = new ArrayList<>();
+	private JTable basketTable;
+	private JTextField removeItem;
+	private JTextField emailInput;
+	private JTextField creditCardInput;
+	private JTextField securityNumberInput;
+	private Basket basket = new Basket();
+	List<Product> products = StockReader.readStockFile("data/Stock.txt");
 
 	/**
 	 * Launch the application.
@@ -120,33 +127,10 @@ public class CustomerFrame extends JFrame {
 					int barcode = Integer.parseInt(barcodeInput.getText());
 					int quantity = Integer.parseInt(quantityInput.getText());
 					double price = StockReader.getPrice(barcode);
-					if (!StockReader.checkIfBarcodeExists(barcode)) {
-						JOptionPane.showMessageDialog(null, "Barcode does not exist!", "Error",
-								JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					if (BasketItem.checkIfInStock(barcode, quantity)) {
-						BasketItem basketItem = new BasketItem(barcode, quantity, price);
-						basket.add(basketItem);
-						JOptionPane.showMessageDialog(null, "Added to basket!", "Success",
-								JOptionPane.INFORMATION_MESSAGE);
-					} else {
-						JOptionPane.showMessageDialog(null, "Not enough in stock!", "Error", JOptionPane.ERROR_MESSAGE);
-					}
 
-					// check if barcode is in basket
-					for (BasketItem item : basket) {
-						if (item.getBarcode() == barcode) {
-							item.setQuantity(item.getQuantity() + quantity);
-							JOptionPane.showMessageDialog(null, "Added to basket!", "Success",
-									JOptionPane.INFORMATION_MESSAGE);
-							return;
-						}
-					}
-					if (quantity <= 0) {
-						JOptionPane.showMessageDialog(null, "Invalid quantity!", "Error", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
+					products = basket.addItem(products, barcode, quantity);
+					populateTable();
+
 
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -168,17 +152,17 @@ public class CustomerFrame extends JFrame {
 		JButton btnViewBasket = new JButton("View Basket");
 		btnViewBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (basket.isEmpty()) {
+				if (basket.getItems().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
-				} else {
-					String basketString = "";
-					for (BasketItem item : basket) {
-						basketString += item.toString() + "\n";
-					}
-					;
-					JOptionPane.showMessageDialog(null, basketString, "Basket", JOptionPane.INFORMATION_MESSAGE);
 				}
+				String basketItems = "";
+				for (Product product : basket.getItems()) {
+					basketItems += product.getBarcode() + " - " + product.getBrand() + " - " + product.getRetailPrice()
+							+ "\n";
+				}
+				JOptionPane.showMessageDialog(null, basketItems, "Basket", JOptionPane.INFORMATION_MESSAGE);
+
 
 			}
 		});
@@ -188,24 +172,108 @@ public class CustomerFrame extends JFrame {
 		JButton btnClearBasket = new JButton("Clear Basket");
 		btnClearBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// check if basket is empty
-				if (basket.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Basket is already empty!", "Error", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				basket.clear();
-				JOptionPane.showMessageDialog(null, "Basket cleared!", "Success", JOptionPane.INFORMATION_MESSAGE);
+				basket.clearBasket();
+				populateTable();
 			}
 		});
 		btnClearBasket.setBounds(10, 412, 107, 23);
 		panelShop.add(btnClearBasket);
 
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_1, null);
+		JPanel panelCheckout = new JPanel();
+		tabbedPane.addTab("Checkout", null, panelCheckout, null);
+		panelCheckout.setLayout(null);
+
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 11, 446, 209);
+		panelCheckout.add(scrollPane_1);
+
+		dtmBasketItems = new DefaultTableModel();
+		dtmBasketItems.setColumnIdentifiers(new String[] { "Barcode", "Quantity", "Price" });
+
+		basketTable = new JTable();
+		scrollPane_1.setViewportView(basketTable);
+		basketTable.setModel(dtmBasketItems);
+
+		JLabel txtRemoveItem = new JLabel("Remove Item");
+		txtRemoveItem.setBounds(10, 306, 71, 14);
+		panelCheckout.add(txtRemoveItem);
+
+		removeItem = new JTextField();
+		removeItem.setBounds(91, 303, 86, 20);
+		panelCheckout.add(removeItem);
+		removeItem.setColumns(10);
+
+		JButton btnRemove = new JButton("Remove");
+		btnRemove.setBounds(187, 302, 89, 23);
+		panelCheckout.add(btnRemove);
+
+		JLabel txtPayPal = new JLabel("PayPal");
+		txtPayPal.setBounds(550, 27, 46, 14);
+		panelCheckout.add(txtPayPal);
+
+		JLabel txtTotal = new JLabel("Total: ");
+		txtTotal.setBounds(309, 231, 46, 14);
+		panelCheckout.add(txtTotal);
+
+		emailInput = new JTextField();
+		emailInput.setBounds(560, 52, 86, 20);
+		panelCheckout.add(emailInput);
+		emailInput.setColumns(10);
+
+		JLabel txtEmail = new JLabel("Email: ");
+		txtEmail.setBounds(504, 55, 46, 14);
+		panelCheckout.add(txtEmail);
+
+		JLabel txtCreditCard = new JLabel("Credit Card");
+		txtCreditCard.setBounds(796, 27, 62, 14);
+		panelCheckout.add(txtCreditCard);
+
+		JLabel txtCardNumber = new JLabel("Card Number:");
+		txtCardNumber.setBounds(757, 55, 71, 14);
+		panelCheckout.add(txtCardNumber);
+
+		creditCardInput = new JTextField();
+		creditCardInput.setBounds(838, 52, 86, 20);
+		panelCheckout.add(creditCardInput);
+		creditCardInput.setColumns(10);
+
+		securityNumberInput = new JTextField();
+		securityNumberInput.setBounds(838, 83, 86, 20);
+		panelCheckout.add(securityNumberInput);
+		securityNumberInput.setColumns(10);
+
+		JLabel txtSecurityNumber = new JLabel("Security Number:");
+		txtSecurityNumber.setBounds(742, 86, 86, 14);
+		panelCheckout.add(txtSecurityNumber);
+
+		JButton btnPayPalPay = new JButton("Buy Now");
+		btnPayPalPay.setBounds(560, 135, 89, 23);
+		panelCheckout.add(btnPayPalPay);
+
+		JButton btnCreditCardPay = new JButton("Buy Now");
+		btnCreditCardPay.setBounds(835, 135, 89, 23);
+		panelCheckout.add(btnCreditCardPay);
+
+
+
+		JButton btnViewBskt = new JButton("View Basket");
+		btnViewBskt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DefaultTableModel model = (DefaultTableModel) basketTable.getModel();
+				model.setRowCount(0); // Clear existing data
+
+				for (Product product : basket.getItems()) {
+					model.addRow(new Object[] { product.getBarcode(), 1, product.getRetailPrice() });
+				}
+
+
+			}
+		});
+		btnViewBskt.setBounds(10, 227, 89, 23);
+		panelCheckout.add(btnViewBskt);
 	}
 
 	public void populateTable() {
-		List<Product> products = StockReader.readStockFile("data/Stock.txt");
 		DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
 		model.setRowCount(0); // Clear existing data
 

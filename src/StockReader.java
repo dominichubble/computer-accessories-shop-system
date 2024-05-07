@@ -82,4 +82,14 @@ public class StockReader {
 		}
 		return false;
 	}
+
+	public Product getProductByBarcode(int barcode) {
+		List<Product> products = readStockFile("data/Stock.txt");
+		for (Product product : products) {
+			if (product.getBarcode() == barcode) {
+				return product;
+			}
+		}
+		return null;
+	}
 }
