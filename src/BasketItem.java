@@ -42,4 +42,8 @@ public class BasketItem {
 		return true;
 	}
 
+	public String toString() {
+		return "Barcode: " + barcode + ", Quantity: " + quantity + ", Price per Item: " + price;
+	}
+
 }

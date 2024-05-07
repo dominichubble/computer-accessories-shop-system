@@ -119,23 +119,35 @@ public class CustomerFrame extends JFrame {
 					}
 					int barcode = Integer.parseInt(barcodeInput.getText());
 					int quantity = Integer.parseInt(quantityInput.getText());
-					int price = StockReader.getPrice(barcode);
+					double price = StockReader.getPrice(barcode);
 					if (!StockReader.checkIfBarcodeExists(barcode)) {
 						JOptionPane.showMessageDialog(null, "Barcode does not exist!", "Error",
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
+					if (BasketItem.checkIfInStock(barcode, quantity)) {
+						BasketItem basketItem = new BasketItem(barcode, quantity, price);
+						basket.add(basketItem);
+						JOptionPane.showMessageDialog(null, "Added to basket!", "Success",
+								JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(null, "Not enough in stock!", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+
+					// check if barcode is in basket
+					for (BasketItem item : basket) {
+						if (item.getBarcode() == barcode) {
+							item.setQuantity(item.getQuantity() + quantity);
+							JOptionPane.showMessageDialog(null, "Added to basket!", "Success",
+									JOptionPane.INFORMATION_MESSAGE);
+							return;
+						}
+					}
 					if (quantity <= 0) {
 						JOptionPane.showMessageDialog(null, "Invalid quantity!", "Error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					if (BasketItem.checkIfInStock(barcode, quantity)) {
-						BasketItem basketItem = new BasketItem(barcode, quantity, price);
-						basket.add(basketItem);
-						JOptionPane.showMessageDialog(null, "Added to basket!", "Success", JOptionPane.INFORMATION_MESSAGE);
-					} else {
-						JOptionPane.showMessageDialog(null, "Not enough in stock!", "Error", JOptionPane.ERROR_MESSAGE);
-					}
+
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -152,6 +164,41 @@ public class CustomerFrame extends JFrame {
 		JLabel txtInsertQuantity = new JLabel("(insert quantity)");
 		txtInsertQuantity.setBounds(106, 310, 89, 14);
 		panelShop.add(txtInsertQuantity);
+
+		JButton btnViewBasket = new JButton("View Basket");
+		btnViewBasket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (basket.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				} else {
+					String basketString = "";
+					for (BasketItem item : basket) {
+						basketString += item.toString() + "\n";
+					}
+					;
+					JOptionPane.showMessageDialog(null, basketString, "Basket", JOptionPane.INFORMATION_MESSAGE);
+				}
+
+			}
+		});
+		btnViewBasket.setBounds(10, 378, 107, 23);
+		panelShop.add(btnViewBasket);
+
+		JButton btnClearBasket = new JButton("Clear Basket");
+		btnClearBasket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// check if basket is empty
+				if (basket.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Basket is already empty!", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				basket.clear();
+				JOptionPane.showMessageDialog(null, "Basket cleared!", "Success", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		btnClearBasket.setBounds(10, 412, 107, 23);
+		panelShop.add(btnClearBasket);
 
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("New tab", null, panel_1, null);

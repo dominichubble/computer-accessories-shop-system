@@ -1,1 +1,1 @@
-continue error handling in adminframe
+make code more OOP

@@ -53,11 +53,11 @@ public class StockReader {
 		products.sort(Comparator.comparingDouble(Product::getRetailPrice));
 	}
 
-	public static int getPrice(int barcode) {
+	public static double getPrice(int barcode) {
 		List<Product> products = readStockFile("data/Stock.txt");
 		for (Product product : products) {
 			if (product.getBarcode() == barcode) {
-				return (int) product.getRetailPrice();
+				return (double) product.getRetailPrice();
 			}
 		}
 		return 0;
