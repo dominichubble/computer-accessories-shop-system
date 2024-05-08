@@ -4,7 +4,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class Basket {
-	private List<Product> items = new ArrayList<Product>();
+	private List<List<Product>> items = new ArrayList<>();
 
 	public List<Product> addItem(List<Product> products, int barcode, int quantity) {
 		try {
@@ -28,10 +28,12 @@ public class Basket {
 			// add the item to the basket
 			for (Product product : products) {
 				if (product.getBarcode() == barcode) {
+					List<Product> productList = new ArrayList<>();
 					for (int i = 0; i < quantity; i++) {
-						items.add(product);
+						productList.add(product);
 						product.setQuantityInStock(product.getQuantityInStock() - 1);
 					}
+					items.add(productList);
 				}
 			}
 		} catch (Exception e) {
@@ -42,7 +44,7 @@ public class Basket {
 	}
 
 	public void removeItem(Product product) {
-		items.remove(product);
+		items.removeIf(itemList -> !itemList.isEmpty() && itemList.get(0).equals(product));
 	}
 
 	public void clearBasket() {
@@ -51,8 +53,11 @@ public class Basket {
 			return;
 		}
 		// add the items back to the stock
-		for (Product item : items) {
-			item.setQuantityInStock(item.getQuantityInStock() + 1);
+		for (List<Product> itemList : items) {
+			if (!itemList.isEmpty()) {
+				Product item = itemList.get(0);
+				item.setQuantityInStock(item.getQuantityInStock() + itemList.size());
+			}
 		}
 		JOptionPane.showMessageDialog(null, "Basket cleared", "Success", JOptionPane.INFORMATION_MESSAGE);
 		items.clear();
@@ -60,15 +65,15 @@ public class Basket {
 
 	public double getTotalPrice() {
 		double totalPrice = 0;
-		for (Product item : items) {
-			totalPrice += item.getRetailPrice();
+		for (List<Product> itemList : items) {
+			if (!itemList.isEmpty()) {
+				totalPrice += itemList.get(0).getRetailPrice() * itemList.size();
+			}
 		}
 		return totalPrice;
 	}
 
-	public List<Product> getItems() {
+	public List<List<Product>> getItems() {
 		return items;
 	}
-
-
 }

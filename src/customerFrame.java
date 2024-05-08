@@ -2,7 +2,6 @@
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -131,7 +130,6 @@ public class CustomerFrame extends JFrame {
 					products = basket.addItem(products, barcode, quantity);
 					populateTable();
 
-
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -157,12 +155,14 @@ public class CustomerFrame extends JFrame {
 					return;
 				}
 				String basketItems = "";
-				for (Product product : basket.getItems()) {
-					basketItems += product.getBarcode() + " - " + product.getBrand() + " - " + product.getRetailPrice()
-							+ "\n";
+				for (List<Product> productList : basket.getItems()) {
+					if (!productList.isEmpty()) {
+						Product product = productList.get(0);
+						basketItems += product.getBarcode() + " - " + product.getBrand() + " - "
+								+ product.getQuantityInStock() + "\n";
+					}
 				}
 				JOptionPane.showMessageDialog(null, basketItems, "Basket", JOptionPane.INFORMATION_MESSAGE);
-
 
 			}
 		});
@@ -254,18 +254,22 @@ public class CustomerFrame extends JFrame {
 		btnCreditCardPay.setBounds(835, 135, 89, 23);
 		panelCheckout.add(btnCreditCardPay);
 
-
-
 		JButton btnViewBskt = new JButton("View Basket");
 		btnViewBskt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel) basketTable.getModel();
 				model.setRowCount(0); // Clear existing data
 
-				for (Product product : basket.getItems()) {
-					model.addRow(new Object[] { product.getBarcode(), 1, product.getRetailPrice() });
+				for (List<Product> productList : basket.getItems()) {
+					if (!productList.isEmpty()) {
+						Product product = productList.get(0);
+						model.addRow(
+								new Object[] { product.getBarcode(), productList.size(), product.getRetailPrice() });
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
-
 
 			}
 		});
