@@ -247,6 +247,19 @@ public class CustomerFrame extends JFrame {
 		panelCheckout.add(txtSecurityNumber);
 
 		JButton btnPayPalPay = new JButton("Buy Now");
+		btnPayPalPay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (emailInput.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				PaymentMethod payPal = new PayPal(emailInput.getText());
+				Receipt receipt = payPal.processPayment(basket.getTotalPrice(), "123 Fake Street");
+				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt", JOptionPane.INFORMATION_MESSAGE);
+				basket.clearBasket();
+				populateTable();
+			}
+		});
 		btnPayPalPay.setBounds(560, 135, 89, 23);
 		panelCheckout.add(btnPayPalPay);
 
@@ -265,8 +278,7 @@ public class CustomerFrame extends JFrame {
 						Product product = productList.get(0);
 						model.addRow(
 								new Object[] { product.getBarcode(), productList.size(), product.getRetailPrice() });
-					}
-					else {
+					} else {
 						JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
