@@ -66,7 +66,7 @@ public class MainFrame extends JFrame {
 					String username = usernameInput.getText().trim();
 					Role role = (Role) roles.getSelectedItem();
 					User user = new User(idStr, username, role);
-					if(User.login()) {
+					if(User.login(user)) {
 						dispose();
 					}
 				} catch (NumberFormatException ex) {

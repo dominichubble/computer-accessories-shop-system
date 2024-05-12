@@ -88,4 +88,10 @@ public class Basket {
 	public List<List<Product>> getItems() {
 		return items;
 	}
+
+	public void soldItems() {
+		items.clear();
+
+	}
+
 }

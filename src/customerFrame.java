@@ -41,7 +41,7 @@ public class CustomerFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CustomerFrame frame = new CustomerFrame();
+					CustomerFrame frame = new CustomerFrame(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,7 +53,7 @@ public class CustomerFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CustomerFrame() {
+	public CustomerFrame(User user) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 576);
 		contentPane = new JPanel();
@@ -217,7 +217,7 @@ public class CustomerFrame extends JFrame {
 					int barcode = Integer.parseInt(removeItemBarcorde.getText());
 					int quantity = Integer.parseInt(removeQuantityInput.getText());
 
-					//check if barcode is 6 digits
+					// check if barcode is 6 digits
 					if (barcode < 100000 || barcode > 999999) {
 						JOptionPane.showMessageDialog(null, "Barcode must be 6 digits!", "Error",
 								JOptionPane.ERROR_MESSAGE);
@@ -227,8 +227,8 @@ public class CustomerFrame extends JFrame {
 					for (Product product : products) {
 						if (product.getBarcode() == barcode) {
 							List<Product> productList = basket.getItems().stream()
-									.filter(itemList -> !itemList.isEmpty() && itemList.get(0).equals(product)).findFirst()
-									.orElse(null);
+									.filter(itemList -> !itemList.isEmpty() && itemList.get(0).equals(product))
+									.findFirst().orElse(null);
 							if (productList != null) {
 								for (int i = 0; i < quantity; i++) {
 									productList.remove(product);
@@ -290,16 +290,24 @@ public class CustomerFrame extends JFrame {
 		JButton btnPayPalPay = new JButton("Buy Now");
 		btnPayPalPay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (basket.getItems().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				if (emailInput.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				PaymentMethod payPal = new PayPal(emailInput.getText());
-				Receipt receipt = payPal.processPayment(basket.getTotalPrice(), "123 Fake Street");
+				if (!emailInput.getText().contains("@")) {
+					JOptionPane.showMessageDialog(null, "Invalid email!", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				Receipt receipt = payPal.processPayment(basket.getTotalPrice(), user.getAddress());
 				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt",
 						JOptionPane.INFORMATION_MESSAGE);
-				basket.clearBasket();
+				basket.soldItems();
 				populateTable();
 			}
 		});
@@ -309,6 +317,10 @@ public class CustomerFrame extends JFrame {
 		JButton btnCreditCardPay = new JButton("Buy Now");
 		btnCreditCardPay.setBounds(835, 135, 89, 23);
 		panelCheckout.add(btnCreditCardPay);
+
+		JLabel txtTotalValue = new JLabel("");
+		txtTotalValue.setBounds(348, 231, 46, 14);
+		panelCheckout.add(txtTotalValue);
 
 		JButton btnViewBskt = new JButton("View Basket");
 		btnViewBskt.addActionListener(new ActionListener() {
@@ -325,8 +337,10 @@ public class CustomerFrame extends JFrame {
 						JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
-
+// change txtTotalValue to the total price of the basket
+				txtTotalValue.setText(Double.toString(basket.getTotalPrice()));
 			}
+
 		});
 		btnViewBskt.setBounds(10, 227, 89, 23);
 		panelCheckout.add(btnViewBskt);
@@ -343,6 +357,7 @@ public class CustomerFrame extends JFrame {
 		removeQuantityInput.setBounds(94, 372, 86, 20);
 		panelCheckout.add(removeQuantityInput);
 		removeQuantityInput.setColumns(10);
+
 	}
 
 	public void populateTable() {

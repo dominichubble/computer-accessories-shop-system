@@ -3,7 +3,7 @@ public class PayPal implements PaymentMethod {
 	String email;
 
 	@Override
-	public Receipt processPayment(double amount, String fullAddress) {
+	public Receipt processPayment(double amount, Address fullAddress) {
 		return new Receipt(email, amount, fullAddress);
 	}
 
