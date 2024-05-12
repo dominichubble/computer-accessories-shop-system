@@ -26,12 +26,13 @@ public class CustomerFrame extends JFrame {
 	private JTextField barcodeInput;
 	private JTextField quantityInput;
 	private JTable basketTable;
-	private JTextField removeItem;
+	private JTextField removeItemBarcorde;
 	private JTextField emailInput;
 	private JTextField creditCardInput;
 	private JTextField securityNumberInput;
 	private Basket basket = new Basket();
 	List<Product> products = StockReader.readStockFile("data/Stock.txt");
+	private JTextField removeQuantityInput;
 
 	/**
 	 * Launch the application.
@@ -159,7 +160,7 @@ public class CustomerFrame extends JFrame {
 					if (!productList.isEmpty()) {
 						Product product = productList.get(0);
 						basketItems += product.getBarcode() + " - " + product.getBrand() + " - "
-								+ product.getQuantityInStock() + "\n";
+								+ product.getRetailPrice() + " - " + productList.size() + " in basket\n";
 					}
 				}
 				JOptionPane.showMessageDialog(null, basketItems, "Basket", JOptionPane.INFORMATION_MESSAGE);
@@ -195,16 +196,56 @@ public class CustomerFrame extends JFrame {
 		basketTable.setModel(dtmBasketItems);
 
 		JLabel txtRemoveItem = new JLabel("Remove Item");
-		txtRemoveItem.setBounds(10, 306, 71, 14);
+		txtRemoveItem.setBounds(53, 306, 71, 14);
 		panelCheckout.add(txtRemoveItem);
 
-		removeItem = new JTextField();
-		removeItem.setBounds(91, 303, 86, 20);
-		panelCheckout.add(removeItem);
-		removeItem.setColumns(10);
+		removeItemBarcorde = new JTextField();
+		removeItemBarcorde.setBounds(94, 331, 86, 20);
+		panelCheckout.add(removeItemBarcorde);
+		removeItemBarcorde.setColumns(10);
 
 		JButton btnRemove = new JButton("Remove");
-		btnRemove.setBounds(187, 302, 89, 23);
+		btnRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Remove item from basket
+				try {
+					if (removeItemBarcorde.getText().isEmpty() || removeQuantityInput.getText().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					int barcode = Integer.parseInt(removeItemBarcorde.getText());
+					int quantity = Integer.parseInt(removeQuantityInput.getText());
+
+					//check if barcode is 6 digits
+					if (barcode < 100000 || barcode > 999999) {
+						JOptionPane.showMessageDialog(null, "Barcode must be 6 digits!", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					// Remove item from basket
+					for (Product product : products) {
+						if (product.getBarcode() == barcode) {
+							List<Product> productList = basket.getItems().stream()
+									.filter(itemList -> !itemList.isEmpty() && itemList.get(0).equals(product)).findFirst()
+									.orElse(null);
+							if (productList != null) {
+								for (int i = 0; i < quantity; i++) {
+									productList.remove(product);
+									product.setQuantityInStock(product.getQuantityInStock() + 1);
+								}
+							}
+						}
+					}
+					javax.swing.JOptionPane.showMessageDialog(null, "Item removed from basket", "Success",
+							javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		btnRemove.setBounds(91, 403, 89, 23);
 		panelCheckout.add(btnRemove);
 
 		JLabel txtPayPal = new JLabel("PayPal");
@@ -250,12 +291,14 @@ public class CustomerFrame extends JFrame {
 		btnPayPalPay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (emailInput.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				PaymentMethod payPal = new PayPal(emailInput.getText());
 				Receipt receipt = payPal.processPayment(basket.getTotalPrice(), "123 Fake Street");
-				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt",
+						JOptionPane.INFORMATION_MESSAGE);
 				basket.clearBasket();
 				populateTable();
 			}
@@ -287,6 +330,19 @@ public class CustomerFrame extends JFrame {
 		});
 		btnViewBskt.setBounds(10, 227, 89, 23);
 		panelCheckout.add(btnViewBskt);
+
+		JLabel txtRemoveBarcode = new JLabel("Barcode");
+		txtRemoveBarcode.setBounds(23, 334, 46, 14);
+		panelCheckout.add(txtRemoveBarcode);
+
+		JLabel txtQuantity = new JLabel("Quantity");
+		txtQuantity.setBounds(23, 375, 46, 14);
+		panelCheckout.add(txtQuantity);
+
+		removeQuantityInput = new JTextField();
+		removeQuantityInput.setBounds(94, 372, 86, 20);
+		panelCheckout.add(removeQuantityInput);
+		removeQuantityInput.setColumns(10);
 	}
 
 	public void populateTable() {

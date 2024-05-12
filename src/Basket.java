@@ -24,10 +24,22 @@ public class Basket {
 				JOptionPane.showMessageDialog(null, "The quantity is not in stock", "Error", JOptionPane.ERROR_MESSAGE);
 				return products;
 			}
+			// check if the product is already in the basket
+			for (List<Product> itemList : items) {
+				if (!itemList.isEmpty() && itemList.get(0).getBarcode() == barcode) {
+					// increase the quantity of the product in the basket
+					for (int i = 0; i < quantity; i++) {
+						itemList.add(itemList.get(0));
+						itemList.get(0).setQuantityInStock(itemList.get(0).getQuantityInStock() - 1);
+					}
+					return products;
+				}
+			}
 
 			// add the item to the basket
 			for (Product product : products) {
 				if (product.getBarcode() == barcode) {
+
 					List<Product> productList = new ArrayList<>();
 					for (int i = 0; i < quantity; i++) {
 						productList.add(product);
