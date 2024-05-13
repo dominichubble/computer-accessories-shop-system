@@ -1,6 +1,6 @@
 
 public class PayPal implements PaymentMethod {
-	String email;
+	private String email;
 
 	@Override
 	public Receipt processPayment(double amount, Address fullAddress) {

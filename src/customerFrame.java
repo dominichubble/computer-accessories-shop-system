@@ -33,6 +33,7 @@ public class CustomerFrame extends JFrame {
 	private Basket basket = new Basket();
 	List<Product> products = StockReader.readStockFile("data/Stock.txt");
 	private JTextField removeQuantityInput;
+	private JTextField barcodeSearchInput;
 
 	/**
 	 * Launch the application.
@@ -180,6 +181,28 @@ public class CustomerFrame extends JFrame {
 		btnClearBasket.setBounds(10, 412, 107, 23);
 		panelShop.add(btnClearBasket);
 
+		JLabel txtFindItem = new JLabel("Find Item");
+		txtFindItem.setBounds(290, 251, 46, 14);
+		panelShop.add(txtFindItem);
+
+		JLabel txtRemoveBarcode_1 = new JLabel("Barcode");
+		txtRemoveBarcode_1.setBounds(259, 279, 46, 14);
+		panelShop.add(txtRemoveBarcode_1);
+
+		barcodeSearchInput = new JTextField();
+		barcodeSearchInput.setColumns(10);
+		barcodeSearchInput.setBounds(315, 276, 86, 20);
+		panelShop.add(barcodeSearchInput);
+
+		JButton btnFastSearch = new JButton("Search");
+		btnFastSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+		btnFastSearch.setBounds(315, 348, 89, 23);
+		panelShop.add(btnFastSearch);
+
 		JPanel panelCheckout = new JPanel();
 		tabbedPane.addTab("Checkout", null, panelCheckout, null);
 		panelCheckout.setLayout(null);
@@ -239,10 +262,12 @@ public class CustomerFrame extends JFrame {
 					}
 					javax.swing.JOptionPane.showMessageDialog(null, "Item removed from basket", "Success",
 							javax.swing.JOptionPane.INFORMATION_MESSAGE);
+					populateTable();
 
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
+
 			}
 		});
 		btnRemove.setBounds(91, 403, 89, 23);
@@ -315,6 +340,25 @@ public class CustomerFrame extends JFrame {
 		panelCheckout.add(btnPayPalPay);
 
 		JButton btnCreditCardPay = new JButton("Buy Now");
+		btnCreditCardPay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (basket.getItems().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (creditCardInput.getText().isEmpty() || securityNumberInput.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				PaymentMethod creditCard = new CreditCard(creditCardInput.getText(), securityNumberInput.getText());
+				Receipt receipt = creditCard.processPayment(basket.getTotalPrice(), user.getAddress());
+				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt",
+						JOptionPane.INFORMATION_MESSAGE);
+				basket.soldItems();
+				populateTable();
+			}
+		});
 		btnCreditCardPay.setBounds(835, 135, 89, 23);
 		panelCheckout.add(btnCreditCardPay);
 
