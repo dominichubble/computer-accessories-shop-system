@@ -3,7 +3,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-public class Basket {
+public class BasketManager {
 	private List<List<Product>> items = new ArrayList<>();
 
 	public List<Product> addItem(List<Product> products, int barcode, int quantity) {

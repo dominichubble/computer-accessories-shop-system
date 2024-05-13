@@ -30,7 +30,7 @@ public class CustomerFrame extends JFrame {
 	private JTextField emailInput;
 	private JTextField creditCardInput;
 	private JTextField securityNumberInput;
-	private Basket basket = new Basket();
+	private BasketManager basketManager = new BasketManager();
 	List<Product> products = StockReader.readStockFile("data/Stock.txt");
 	private JTextField removeQuantityInput;
 	private JTextField barcodeSearchInput;
@@ -131,7 +131,7 @@ public class CustomerFrame extends JFrame {
 					int quantity = Integer.parseInt(quantityInput.getText());
 					double price = StockReader.getPrice(barcode);
 
-					products = basket.addItem(products, barcode, quantity);
+					products = basketManager.addItem(products, barcode, quantity);
 					productManager.populateTable(tblProducts, products);
 
 				} catch (NumberFormatException ex) {
@@ -154,12 +154,12 @@ public class CustomerFrame extends JFrame {
 		JButton btnViewBasket = new JButton("View Basket");
 		btnViewBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (basket.getItems().isEmpty()) {
+				if (basketManager.getItems().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				String basketItems = "";
-				for (List<Product> productList : basket.getItems()) {
+				for (List<Product> productList : basketManager.getItems()) {
 					if (!productList.isEmpty()) {
 						Product product = productList.get(0);
 						basketItems += product.getBarcode() + " - " + product.getBrand() + " - "
@@ -176,7 +176,7 @@ public class CustomerFrame extends JFrame {
 		JButton btnClearBasket = new JButton("Clear Basket");
 		btnClearBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				basket.clearBasket();
+				basketManager.clearBasket();
 				productManager.populateTable(tblProducts, products);
 			}
 		});
@@ -315,7 +315,7 @@ public class CustomerFrame extends JFrame {
 					// Remove item from basket
 					for (Product product : products) {
 						if (product.getBarcode() == barcode) {
-							List<Product> productList = basket.getItems().stream()
+							List<Product> productList = basketManager.getItems().stream()
 									.filter(itemList -> !itemList.isEmpty() && itemList.get(0).equals(product))
 									.findFirst().orElse(null);
 							if (productList != null) {
@@ -381,7 +381,7 @@ public class CustomerFrame extends JFrame {
 		JButton btnPayPalPay = new JButton("Buy Now");
 		btnPayPalPay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (basket.getItems().isEmpty()) {
+				if (basketManager.getItems().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -395,10 +395,10 @@ public class CustomerFrame extends JFrame {
 					JOptionPane.showMessageDialog(null, "Invalid email!", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				Receipt receipt = payPal.processPayment(basket.getTotalPrice(), user.getAddress());
+				Receipt receipt = payPal.processPayment(basketManager.getTotalPrice(), user.getAddress());
 				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt",
 						JOptionPane.INFORMATION_MESSAGE);
-				basket.soldItems();
+				basketManager.soldItems();
 				productManager.populateTable(tblProducts, products);
 			}
 		});
@@ -408,7 +408,7 @@ public class CustomerFrame extends JFrame {
 		JButton btnCreditCardPay = new JButton("Buy Now");
 		btnCreditCardPay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (basket.getItems().isEmpty()) {
+				if (basketManager.getItems().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -418,10 +418,10 @@ public class CustomerFrame extends JFrame {
 					return;
 				}
 				PaymentMethod creditCard = new CreditCard(creditCardInput.getText(), securityNumberInput.getText());
-				Receipt receipt = creditCard.processPayment(basket.getTotalPrice(), user.getAddress());
+				Receipt receipt = creditCard.processPayment(basketManager.getTotalPrice(), user.getAddress());
 				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt",
 						JOptionPane.INFORMATION_MESSAGE);
-				basket.soldItems();
+				basketManager.soldItems();
 				productManager.populateTable(tblProducts, products);
 			}
 		});
@@ -438,7 +438,7 @@ public class CustomerFrame extends JFrame {
 				DefaultTableModel model = (DefaultTableModel) basketTable.getModel();
 				model.setRowCount(0); // Clear existing data
 
-				for (List<Product> productList : basket.getItems()) {
+				for (List<Product> productList : basketManager.getItems()) {
 					if (!productList.isEmpty()) {
 						Product product = productList.get(0);
 						model.addRow(
@@ -448,7 +448,7 @@ public class CustomerFrame extends JFrame {
 					}
 				}
 // change txtTotalValue to the total price of the basket
-				txtTotalValue.setText(Double.toString(basket.getTotalPrice()));
+				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}
 
 		});
