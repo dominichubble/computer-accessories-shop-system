@@ -35,6 +35,7 @@ public class CustomerFrame extends JFrame {
 	private JTextField removeQuantityInput;
 	private JTextField barcodeSearchInput;
 	private JTextField miceInput;
+	private ProductManager productManager = new ProductManager();
 
 	/**
 	 * Launch the application.
@@ -98,7 +99,7 @@ public class CustomerFrame extends JFrame {
 		JButton btnView = new JButton("View");
 		btnView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				populateTable();
+				productManager.populateTable(tblProducts, products);
 			}
 		});
 		btnView.setBounds(884, 11, 89, 72);
@@ -131,7 +132,7 @@ public class CustomerFrame extends JFrame {
 					double price = StockReader.getPrice(barcode);
 
 					products = basket.addItem(products, barcode, quantity);
-					populateTable();
+					productManager.populateTable(tblProducts, products);
 
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -176,7 +177,7 @@ public class CustomerFrame extends JFrame {
 		btnClearBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				basket.clearBasket();
-				populateTable();
+				productManager.populateTable(tblProducts, products);
 			}
 		});
 		btnClearBasket.setBounds(10, 412, 107, 23);
@@ -327,7 +328,7 @@ public class CustomerFrame extends JFrame {
 					}
 					javax.swing.JOptionPane.showMessageDialog(null, "Item removed from basket", "Success",
 							javax.swing.JOptionPane.INFORMATION_MESSAGE);
-					populateTable();
+					productManager.populateTable(tblProducts, products);
 
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -398,7 +399,7 @@ public class CustomerFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt",
 						JOptionPane.INFORMATION_MESSAGE);
 				basket.soldItems();
-				populateTable();
+				productManager.populateTable(tblProducts, products);
 			}
 		});
 		btnPayPalPay.setBounds(560, 135, 89, 23);
@@ -421,7 +422,7 @@ public class CustomerFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt",
 						JOptionPane.INFORMATION_MESSAGE);
 				basket.soldItems();
-				populateTable();
+				productManager.populateTable(tblProducts, products);
 			}
 		});
 		btnCreditCardPay.setBounds(835, 135, 89, 23);
@@ -469,29 +470,4 @@ public class CustomerFrame extends JFrame {
 
 	}
 
-	public void populateTable() {
-		DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
-		model.setRowCount(0); // Clear existing data
-
-		for (Product product : products) {
-
-			String deviceType = "";
-			String additionalInfo = "";
-
-			if (product instanceof Keyboard) {
-				Keyboard keyboard = (Keyboard) product;
-				deviceType = keyboard.getDeviceType().toString();
-				additionalInfo = keyboard.getAdditionalInfo().toString();
-			} else if (product instanceof Mouse) {
-				Mouse mouse = (Mouse) product;
-				deviceType = mouse.getDeviceType().toString();
-				additionalInfo = Integer.toString(mouse.getAdditionalInfo());
-			}
-
-			model.addRow(new Object[] { product.getBarcode(), product.getCategory(), deviceType, product.getBrand(),
-					product.getColor(), product.getConnectivity(), product.getQuantityInStock(),
-					product.getRetailPrice(), additionalInfo });
-		}
-
-	}
 }
