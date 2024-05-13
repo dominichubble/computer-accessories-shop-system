@@ -34,6 +34,7 @@ public class CustomerFrame extends JFrame {
 	List<Product> products = StockReader.readStockFile("data/Stock.txt");
 	private JTextField removeQuantityInput;
 	private JTextField barcodeSearchInput;
+	private JTextField miceInput;
 
 	/**
 	 * Launch the application.
@@ -197,11 +198,75 @@ public class CustomerFrame extends JFrame {
 		JButton btnFastSearch = new JButton("Search");
 		btnFastSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// populate table with only the searched item
+				DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
+				model.setRowCount(0); // Clear existing data
+
+				for (Product product : products) {
+					if (product.getBarcode() == Integer.parseInt(barcodeSearchInput.getText())) {
+						String deviceType = "";
+						String additionalInfo = "";
+
+						if (product instanceof Keyboard) {
+							Keyboard keyboard = (Keyboard) product;
+							deviceType = keyboard.getDeviceType().toString();
+							additionalInfo = keyboard.getAdditionalInfo().toString();
+						} else if (product instanceof Mouse) {
+							Mouse mouse = (Mouse) product;
+							deviceType = mouse.getDeviceType().toString();
+							additionalInfo = Integer.toString(mouse.getAdditionalInfo());
+						}
+
+						model.addRow(new Object[] { product.getBarcode(), product.getCategory(), deviceType,
+								product.getBrand(), product.getColor(), product.getConnectivity(),
+								product.getQuantityInStock(), product.getRetailPrice(), additionalInfo });
+					}
+				}
 
 			}
 		});
 		btnFastSearch.setBounds(315, 348, 89, 23);
 		panelShop.add(btnFastSearch);
+
+		JLabel numberOfMiceButtons = new JLabel("Number Of Mice Buttons");
+		numberOfMiceButtons.setBounds(518, 251, 129, 14);
+		panelShop.add(numberOfMiceButtons);
+
+		JLabel txtNumber = new JLabel("Number");
+		txtNumber.setBounds(497, 279, 46, 14);
+		panelShop.add(txtNumber);
+
+		miceInput = new JTextField();
+		miceInput.setBounds(561, 276, 86, 20);
+		panelShop.add(miceInput);
+		miceInput.setColumns(10);
+
+		JButton btnMiceSearch = new JButton("Search");
+		btnMiceSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// populate table with mice that have the same number of buttons as the input
+				// only
+				DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
+				model.setRowCount(0); // Clear existing data
+
+				for (Product product : products) {
+					if (product instanceof Mouse) {
+						Mouse mouse = (Mouse) product;
+						if (mouse.getAdditionalInfo() == Integer.parseInt(miceInput.getText())) {
+							String deviceType = mouse.getDeviceType().toString();
+							String additionalInfo = Integer.toString(mouse.getAdditionalInfo());
+
+							model.addRow(new Object[] { product.getBarcode(), product.getCategory(), deviceType,
+									product.getBrand(), product.getColor(), product.getConnectivity(),
+									product.getQuantityInStock(), product.getRetailPrice(), additionalInfo });
+						}
+					}
+
+				}
+			}
+		});
+		btnMiceSearch.setBounds(561, 348, 89, 23);
+		panelShop.add(btnMiceSearch);
 
 		JPanel panelCheckout = new JPanel();
 		tabbedPane.addTab("Checkout", null, panelCheckout, null);
