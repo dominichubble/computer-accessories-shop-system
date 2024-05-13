@@ -4,7 +4,11 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class BasketManager {
-	private List<List<Product>> items = new ArrayList<>();
+	private Basket basket;
+
+	public BasketManager() {
+		basket = new Basket();
+	}
 
 	public List<Product> addItem(List<Product> products, int barcode, int quantity) {
 		try {
@@ -24,8 +28,9 @@ public class BasketManager {
 				JOptionPane.showMessageDialog(null, "The quantity is not in stock", "Error", JOptionPane.ERROR_MESSAGE);
 				return products;
 			}
+
 			// check if the product is already in the basket
-			for (List<Product> itemList : items) {
+			for (List<Product> itemList : basket.getItems()) {
 				if (!itemList.isEmpty() && itemList.get(0).getBarcode() == barcode) {
 					// increase the quantity of the product in the basket
 					for (int i = 0; i < quantity; i++) {
@@ -45,39 +50,39 @@ public class BasketManager {
 						productList.add(product);
 						product.setQuantityInStock(product.getQuantityInStock() - 1);
 					}
-					items.add(productList);
+					basket.add(productList);
 				}
 			}
+			JOptionPane.showMessageDialog(null, "Item added to basket", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "An error occurred", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		JOptionPane.showMessageDialog(null, "Item added to basket", "Success", JOptionPane.INFORMATION_MESSAGE);
 		return products;
 	}
 
 	public void removeItem(Product product) {
-		items.removeIf(itemList -> !itemList.isEmpty() && itemList.get(0).equals(product));
+		basket.removeItem(product);
 	}
 
 	public void clearBasket() {
-		if (items.isEmpty()) {
+		if (basket.getItems().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Basket is already empty!", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		// add the items back to the stock
-		for (List<Product> itemList : items) {
+		for (List<Product> itemList : basket.getItems()) {
 			if (!itemList.isEmpty()) {
 				Product item = itemList.get(0);
 				item.setQuantityInStock(item.getQuantityInStock() + itemList.size());
 			}
 		}
 		JOptionPane.showMessageDialog(null, "Basket cleared", "Success", JOptionPane.INFORMATION_MESSAGE);
-		items.clear();
+		basket.getItems().clear();
 	}
 
 	public double getTotalPrice() {
 		double totalPrice = 0;
-		for (List<Product> itemList : items) {
+		for (List<Product> itemList : basket.getItems()) {
 			if (!itemList.isEmpty()) {
 				totalPrice += itemList.get(0).getRetailPrice() * itemList.size();
 			}
@@ -86,11 +91,11 @@ public class BasketManager {
 	}
 
 	public List<List<Product>> getItems() {
-		return items;
+		return basket.getItems();
 	}
 
 	public void soldItems() {
-		items.clear();
+		basket.getItems().clear();
 
 	}
 
