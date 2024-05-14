@@ -1,4 +1,4 @@
-222222, keyboard, GAMING, LOGITECH, RED, wired, 4, 8.00, 3.00, US
+222222, keyboard, GAMING, LOGITECH, RED, wired, 2, 8.00, 3.00, US
 124566, mouse, standard, ADVENT, GREY, wired, 15, 2.50, 4.99, 2
 124455, keyboard, STANDARD, ADVENT, WHITE, wired, 10, 3.50, 5.99, UK
 221101, mouse, standard, LOGITECH, BLACK, wired, 3, 3.00, 6.99, 3

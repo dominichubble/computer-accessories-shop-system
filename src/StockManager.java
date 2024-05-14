@@ -87,7 +87,7 @@ public class StockManager {
 			products.add(product); // Add new product if not found
 		}
 		sortProductsByPrice();
-		saveProducts();
+		saveProducts(products);
 		JOptionPane.showMessageDialog(null, "Product successfully updated!", "Success",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
@@ -101,7 +101,7 @@ public class StockManager {
 		return -1;
 	}
 
-	private void saveProducts() {
+	public void saveProducts(List<Product> products) {
 		try (PrintWriter writer = new PrintWriter(new File(filePath))) {
 			for (Product product : products) {
 				writer.println(productToFileFormat(product));

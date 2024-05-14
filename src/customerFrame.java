@@ -36,6 +36,7 @@ public class CustomerFrame extends JFrame {
 	private JTextField barcodeSearchInput;
 	private JTextField miceInput;
 	private ProductManager productManager = new ProductManager();
+	private StockManager stockManager = new StockManager("data/Stock.txt");
 
 	/**
 	 * Launch the application.
@@ -311,6 +312,7 @@ public class CustomerFrame extends JFrame {
 				PaymentMethod payPal = new PayPal(emailInput.getText());
 				basketManager.buyItems(payPal, user.getAddress());
 				productManager.populateTable(tblProducts, products);
+				stockManager.saveProducts(products);
 			}
 		});
 		btnPayPalPay.setBounds(838, 271, 89, 23);
@@ -332,6 +334,7 @@ public class CustomerFrame extends JFrame {
 				PaymentMethod creditCard = new CreditCard(creditCardInput.getText(), securityNumberInput.getText());
 				basketManager.buyItems(creditCard, user.getAddress());
 				productManager.populateTable(tblProducts, products);
+				stockManager.saveProducts(products);
 			}
 		});
 		btnCreditCardPay.setBounds(838, 135, 89, 23);
