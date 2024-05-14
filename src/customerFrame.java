@@ -313,6 +313,7 @@ public class CustomerFrame extends JFrame {
 				basketManager.buyItems(payPal, user.getAddress());
 				productManager.populateTable(tblProducts, products);
 				stockManager.saveProducts(products);
+				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}
 		});
 		btnPayPalPay.setBounds(838, 271, 89, 23);
@@ -335,6 +336,7 @@ public class CustomerFrame extends JFrame {
 				basketManager.buyItems(creditCard, user.getAddress());
 				productManager.populateTable(tblProducts, products);
 				stockManager.saveProducts(products);
+				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}
 		});
 		btnCreditCardPay.setBounds(838, 135, 89, 23);
