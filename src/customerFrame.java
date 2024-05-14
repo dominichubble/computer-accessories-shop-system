@@ -202,7 +202,7 @@ public class CustomerFrame extends JFrame {
 		panelShop.add(numberOfMiceButtons);
 
 		JLabel txtNumber = new JLabel("Number");
-		txtNumber.setBounds(510, 276, 46, 14);
+		txtNumber.setBounds(510, 276, 90, 14);
 		panelShop.add(txtNumber);
 
 		miceInput = new JTextField();
@@ -250,6 +250,9 @@ public class CustomerFrame extends JFrame {
 				int barcode = Integer.parseInt(removeItemBarcorde.getText());
 				int quantity = Integer.parseInt(removeQuantityInput.getText());
 				basketManager.removeItem(products, barcode, quantity);
+				if (ErrorHandler.checkIfBasketIsEmpty(basketManager.getItems())) {
+					return;
+				}
 				basketManager.populateTable(basketTable);
 				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}
