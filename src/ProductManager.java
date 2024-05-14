@@ -5,7 +5,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class ProductManager {
 
-	List<Product> products;
+	private List<Product> products;
 
 	public ProductManager() {
 		products = StockReader.readStockFile("data/Stock.txt");

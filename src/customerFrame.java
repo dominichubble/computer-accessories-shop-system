@@ -31,7 +31,7 @@ public class CustomerFrame extends JFrame {
 	private JTextField creditCardInput;
 	private JTextField securityNumberInput;
 	private BasketManager basketManager = new BasketManager();
-	List<Product> products = StockReader.readStockFile("data/Stock.txt");
+	private List<Product> products = StockReader.readStockFile("data/Stock.txt");
 	private JTextField removeQuantityInput;
 	private JTextField barcodeSearchInput;
 	private JTextField miceInput;
