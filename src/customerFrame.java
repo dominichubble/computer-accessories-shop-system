@@ -319,16 +319,7 @@ public class CustomerFrame extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				// check is the credit card number is 6 digits
-				if (creditCardInput.getText().length() != 6) {
-					JOptionPane.showMessageDialog(null, "The credit card number must be 6 digits", "Error",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				// check is the security number is 3 digits
-				if (securityNumberInput.getText().length() != 3) {
-					JOptionPane.showMessageDialog(null, "The security number must be 3 digits", "Error",
-							JOptionPane.ERROR_MESSAGE);
+				if (!ErrorHandler.checkIfCreditCardIsValid(creditCardInput.getText())|| !ErrorHandler.checkIfSecurityNumberIsValid(securityNumberInput.getText())		) {
 					return;
 				}
 
@@ -348,7 +339,6 @@ public class CustomerFrame extends JFrame {
 		btnViewBskt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				basketManager.populateTable(basketTable);
-// change txtTotalValue to the total price of the basket
 				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}
 

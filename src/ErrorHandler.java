@@ -114,6 +114,24 @@ public class ErrorHandler {
         return true;
     }
 
+    public static Boolean checkIfCreditCardIsValid(String creditCardNumber) {
+        if (!creditCardNumber.matches("^[0-9]{6}$")) {
+            JOptionPane.showMessageDialog(null, "The credit card number must be 6 digits", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    public static Boolean checkIfSecurityNumberIsValid(String securityNumber) {
+        if (!securityNumber.matches("^[0-9]{3}$")) {
+            JOptionPane.showMessageDialog(null, "The security number must be 3 digits", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
 
 
 }
