@@ -30,7 +30,7 @@ public class AdminFrame extends JFrame {
 	private JTextField costInput;
 	private JTextField priceInput;
 	private JTextField infoInput;
-private StockManager stockManager = new StockManager("data/Stock.txt");
+	private StockManager stockManager = new StockManager("data/Stock.txt");
 
 	/**
 	 * Launch the application.
@@ -185,8 +185,8 @@ private StockManager stockManager = new StockManager("data/Stock.txt");
 
 					// Proceed to add or update the product
 
-					stockManager.addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type,
-							additionalInfo);
+					stockManager.addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category,
+							type, additionalInfo);
 					JOptionPane.showMessageDialog(null, "Product successfully updated!", "Success",
 							JOptionPane.INFORMATION_MESSAGE);
 
@@ -257,7 +257,5 @@ private StockManager stockManager = new StockManager("data/Stock.txt");
 		productManager.adminPopulateTable(tblProducts, products);
 
 	}
-
-
 
 }

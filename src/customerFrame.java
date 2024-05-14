@@ -280,7 +280,8 @@ public class CustomerFrame extends JFrame {
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (removeItemBarcorde.getText().isEmpty() || removeQuantityInput.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				int barcode = Integer.parseInt(removeItemBarcorde.getText());
@@ -339,7 +340,7 @@ public class CustomerFrame extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				
+
 				if (!emailInput.getText().contains("@")) {
 					JOptionPane.showMessageDialog(null, "Invalid email!", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
