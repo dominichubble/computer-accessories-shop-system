@@ -31,6 +31,8 @@ public class AdminFrame extends JFrame {
 	private JTextField priceInput;
 	private JTextField infoInput;
 	private StockManager stockManager = new StockManager("data/Stock.txt");
+			private List<Product> products = StockReader.readStockFile("data/Stock.txt");
+		private ProductManager productManager = new ProductManager();
 
 	/**
 	 * Launch the application.
@@ -94,7 +96,7 @@ public class AdminFrame extends JFrame {
 		JButton btnView = new JButton("View");
 		btnView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				populateTable();
+				productManager.adminPopulateTable(tblProducts, products);
 			}
 		});
 		btnView.setBounds(884, 11, 89, 72);
@@ -187,8 +189,6 @@ public class AdminFrame extends JFrame {
 
 					stockManager.addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category,
 							type, additionalInfo);
-					JOptionPane.showMessageDialog(null, "Product successfully updated!", "Success",
-							JOptionPane.INFORMATION_MESSAGE);
 
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null,
@@ -251,11 +251,6 @@ public class AdminFrame extends JFrame {
 
 	}
 
-	public void populateTable() {
-		List<Product> products = StockReader.readStockFile("data/Stock.txt");
-		ProductManager productManager = new ProductManager();
-		productManager.adminPopulateTable(tblProducts, products);
 
-	}
 
 }

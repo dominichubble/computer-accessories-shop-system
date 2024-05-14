@@ -86,6 +86,7 @@ public class StockManager {
 		}
 		sortProductsByPrice();
 		saveProducts();
+		JOptionPane.showMessageDialog(null, "Product successfully updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private int findProductIndexByBarcode(int barcode) {
