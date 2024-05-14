@@ -30,7 +30,8 @@ public class BasketManager {
 						itemList.add(itemList.get(0));
 						itemList.get(0).setQuantityInStock(itemList.get(0).getQuantityInStock() - 1);
 					}
-					JOptionPane.showMessageDialog(null, "Item added to basket", "Success", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Item added to basket", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
 					return products;
 				}
 			}
@@ -58,7 +59,8 @@ public class BasketManager {
 		try {
 			// error handling
 			if (!ErrorHandler.checkIfBarcodeExists(barcode) || !ErrorHandler.checkIfQuantityIsGreaterThanZero(quantity)
-					|| !ErrorHandler.checkIfBarcodeIs6Digits(barcode)) {
+					|| !ErrorHandler.checkIfBarcodeIs6Digits(barcode)
+					) {
 				return;
 			}
 			// check if the product is in the basket
@@ -74,10 +76,15 @@ public class BasketManager {
 							}
 						}
 					}
+					JOptionPane.showMessageDialog(null, "Item removed from basket", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
 					break;
 				}
+				else {
+					JOptionPane.showMessageDialog(null, "The item is not in the basket", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
-			JOptionPane.showMessageDialog(null, "Item removed from basket", "Success", JOptionPane.INFORMATION_MESSAGE);
+
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "An error occurred", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -138,9 +145,7 @@ public class BasketManager {
 	}
 
 	public void populateTable(JTable basketTable) {
-		if (ErrorHandler.checkIfBasketIsEmpty(basket.getItems()) == false) {
-			return;
-		}
+
 		DefaultTableModel model = (DefaultTableModel) basketTable.getModel();
 		model.setRowCount(0); // Clear existing data
 
@@ -155,7 +160,7 @@ public class BasketManager {
 
 	public void buyItems(PaymentMethod paymentMethod, Address address) {
 		// check is basket is empty
-		if (ErrorHandler.checkIfBasketIsEmpty(basket.getItems()) == false) {
+		if (!ErrorHandler.checkIfBasketIsEmpty(basket.getItems())) {
 			return;
 		}
 		Receipt receipt = paymentMethod.processPayment(getTotalPrice(), address);

@@ -18,7 +18,7 @@ public class Receipt {
 	}
 
 	public String getReceiptTxt() {
-		return "Receipt: " + personalInfo + "\nAmount: " + amount + "\nAddress: " + fullAddress.toString() + "\nDate: "
+		return "Receipt for: " + personalInfo + "\nAmount: " + amount + "\nAddress: " + fullAddress.toString() + "\nDate: "
 				+ java.time.LocalDate.now();
 	}
 

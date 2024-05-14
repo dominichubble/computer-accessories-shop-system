@@ -313,6 +313,7 @@ public class CustomerFrame extends JFrame {
 				basketManager.buyItems(payPal, user.getAddress());
 				productManager.populateTable(tblProducts, products);
 				stockManager.saveProducts(products);
+				basketManager.populateTable(basketTable);
 				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}
 		});
@@ -336,6 +337,7 @@ public class CustomerFrame extends JFrame {
 				basketManager.buyItems(creditCard, user.getAddress());
 				productManager.populateTable(tblProducts, products);
 				stockManager.saveProducts(products);
+				basketManager.populateTable(basketTable);
 				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}
 		});
@@ -345,6 +347,9 @@ public class CustomerFrame extends JFrame {
 		JButton btnViewBskt = new JButton("View Basket");
 		btnViewBskt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (!ErrorHandler.checkIfBasketIsEmpty(basketManager.getItems())) {
+					return;
+				}
 				basketManager.populateTable(basketTable);
 				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}

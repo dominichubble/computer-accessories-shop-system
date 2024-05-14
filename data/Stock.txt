@@ -1,9 +1,9 @@
-124566, mouse, standard, ADVENT, GREY, wired, 15, 2.50, 4.99, 2
+124566, mouse, standard, ADVENT, GREY, wired, 11, 2.50, 4.99, 2
 124455, keyboard, STANDARD, ADVENT, WHITE, wired, 10, 3.50, 5.99, UK
 221101, mouse, standard, LOGITECH, BLACK, wired, 3, 3.00, 6.99, 3
 222222, keyboard, GAMING, LOG, GREEN, wired, 11, 3.00, 7.00, UK
 237799, mouse, standard, LOGITECH, GREY, wireless, 13, 7.00, 8.00, 2
-111111, keyboard, GAMING, LOG, GREEN, wired, 3, 8.00, 8.00, UK
+111111, keyboard, GAMING, LOG, GREEN, wired, 0, 8.00, 8.00, UK
 237788, keyboard, STANDARD, LOGITECH, GREY, wired, 15, 6.50, 8.99, UK
 112233, mouse, gaming, LOGITECH, BLACK, wireless, 15, 7.50, 9.50, 3
 237700, mouse, gaming, ANKER, BLACK, wired, 1, 8.00, 11.99, 7
