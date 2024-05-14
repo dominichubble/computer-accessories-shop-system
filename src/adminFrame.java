@@ -161,16 +161,6 @@ public class AdminFrame extends JFrame {
                 return;
             }
 
-            String additionalInfo = infoInput.getText().trim().toUpperCase();
-            ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
-
-            // Check for Keyboard category and validate infoInput
-            if (category == ProductCategory.KEYBOARD && !(additionalInfo.equals("UK") || additionalInfo.equals("US"))) {
-                JOptionPane.showMessageDialog(null, "For keyboards, the Info must be either 'UK' or 'US'.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Assuming other validations and parsing are successful
             int barcode = Integer.parseInt(barcodeInput.getText().trim());
             int stock = Integer.parseInt(stockInput.getText().trim());
             double cost = Double.parseDouble(costInput.getText().trim());
@@ -179,35 +169,14 @@ public class AdminFrame extends JFrame {
             String colour = colourInput.getText().trim();
             DeviceType type = (DeviceType) typeInput.getSelectedItem();
             ConnectivityType connectivity = (ConnectivityType) connectivityInput.getSelectedItem();
+			String additionalInfo = infoInput.getText().trim().toUpperCase();
+            ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
 
-			// Check if the barcode is 6 digits
-			if (barcode < 100000 || barcode > 999999) {
-				JOptionPane.showMessageDialog(null, "The barcode must be a 6-digit number", "Error",
-						JOptionPane.ERROR_MESSAGE);
+
+			if (!ErrorHandler.checkIfBarcodeIs6Digits(barcode) || !ErrorHandler.checkIfBrandIsValid(brand) || !ErrorHandler.checkIfColorIsValid(colour) || !ErrorHandler.checkIfCostIsGreaterThanZero(cost) || !ErrorHandler.checkIfPriceIsGreaterThanZero(price) || (category == ProductCategory.KEYBOARD && !ErrorHandler.checkIfKeyboardAdditionalInfoIsValid(additionalInfo)) || (category == ProductCategory.MOUSE && !ErrorHandler.checkIfMouseAdditionalInfoIsValid(additionalInfo))
+			|| !ErrorHandler.checkIfBarcodeIsPresent(barcode)) {	
 				return;
 			}
-
-			// Check if brand and colour are alphanumeric
-			if (!brand.matches("^[a-zA-Z0-9]*$") || !colour.matches("^[a-zA-Z0-9]*$")) {
-				JOptionPane.showMessageDialog(null, "The brand and colour must be alphanumeric", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
-			// Check if the stock is greater than 0
-			if (stock <= 0) {
-				JOptionPane.showMessageDialog(null, "The stock must be greater than 0", "Error", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
-			// Check if the cost and price are greater than 0
-			if (cost <= 0 || price <= 0) {
-				JOptionPane.showMessageDialog(null, "The cost and price must be greater than 0", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
-			
 
             // Proceed to add or update the product
             addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type, additionalInfo);
@@ -273,28 +242,8 @@ public class AdminFrame extends JFrame {
 
 	public void populateTable() {
 		List<Product> products = StockReader.readStockFile("data/Stock.txt");
-		DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
-		model.setRowCount(0); // Clear existing data
-
-		for (Product product : products) {
-
-			String deviceType = "";
-			String additionalInfo = "";
-
-			if (product instanceof Keyboard) {
-				Keyboard keyboard = (Keyboard) product;
-				deviceType = keyboard.getDeviceType().toString();
-				additionalInfo = keyboard.getAdditionalInfo().toString();
-			} else if (product instanceof Mouse) {
-				Mouse mouse = (Mouse) product;
-				deviceType = mouse.getDeviceType().toString();
-				additionalInfo = Integer.toString(mouse.getAdditionalInfo());
-			}
-
-			model.addRow(new Object[] { product.getBarcode(), product.getCategory(), deviceType, product.getBrand(),
-					product.getColor(), product.getConnectivity(), product.getQuantityInStock(),
-					product.getOriginalCost(), product.getRetailPrice(), additionalInfo });
-		}
+		ProductManager productManager = new ProductManager();
+		productManager.populateTable(tblProducts, products);
 
 	}
 
