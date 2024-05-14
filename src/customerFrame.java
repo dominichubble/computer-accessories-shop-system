@@ -182,31 +182,7 @@ public class CustomerFrame extends JFrame {
 		JButton btnFastSearch = new JButton("Search");
 		btnFastSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// populate table with only the searched item
-				DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
-				model.setRowCount(0); // Clear existing data
-
-				for (Product product : products) {
-					if (product.getBarcode() == Integer.parseInt(barcodeSearchInput.getText())) {
-						String deviceType = "";
-						String additionalInfo = "";
-
-						if (product instanceof Keyboard) {
-							Keyboard keyboard = (Keyboard) product;
-							deviceType = keyboard.getDeviceType().toString();
-							additionalInfo = keyboard.getAdditionalInfo().toString();
-						} else if (product instanceof Mouse) {
-							Mouse mouse = (Mouse) product;
-							deviceType = mouse.getDeviceType().toString();
-							additionalInfo = Integer.toString(mouse.getAdditionalInfo());
-						}
-
-						model.addRow(new Object[] { product.getBarcode(), product.getCategory(), deviceType,
-								product.getBrand(), product.getColor(), product.getConnectivity(),
-								product.getQuantityInStock(), product.getRetailPrice(), additionalInfo });
-					}
-				}
-
+				productManager.fastSearch(tblProducts, barcodeSearchInput.getText());
 			}
 		});
 		btnFastSearch.setBounds(315, 348, 89, 23);
@@ -228,25 +204,7 @@ public class CustomerFrame extends JFrame {
 		JButton btnMiceSearch = new JButton("Search");
 		btnMiceSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// populate table with mice that have the same number of buttons as the input
-				// only
-				DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
-				model.setRowCount(0); // Clear existing data
-
-				for (Product product : products) {
-					if (product instanceof Mouse) {
-						Mouse mouse = (Mouse) product;
-						if (mouse.getAdditionalInfo() == Integer.parseInt(miceInput.getText())) {
-							String deviceType = mouse.getDeviceType().toString();
-							String additionalInfo = Integer.toString(mouse.getAdditionalInfo());
-
-							model.addRow(new Object[] { product.getBarcode(), product.getCategory(), deviceType,
-									product.getBrand(), product.getColor(), product.getConnectivity(),
-									product.getQuantityInStock(), product.getRetailPrice(), additionalInfo });
-						}
-					}
-
-				}
+				productManager.miceSearch(tblProducts, miceInput.getText());
 			}
 		});
 		btnMiceSearch.setBounds(561, 348, 89, 23);

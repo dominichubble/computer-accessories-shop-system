@@ -106,6 +106,14 @@ public class ErrorHandler {
         return true;
     }
 
+    public static Boolean checkIfInputIsNumeric(String input) {
+        if (!input.matches("^[0-9]*$")) {
+            JOptionPane.showMessageDialog(null, "The input must be numeric", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
 
 
 }

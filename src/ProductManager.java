@@ -59,4 +59,57 @@ public class ProductManager {
 		}
 	}
 
+	public void fastSearch(JTable table, String search) {
+		if (!ErrorHandler.checkIfBarcodeIs6Digits(Integer.parseInt(search))
+				|| !ErrorHandler.checkIfBarcodeExists(Integer.parseInt(search))) {
+			return;
+		}
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0); // Clear existing data
+
+		for (Product product : products) {
+			if (product.getBarcode() == Integer.parseInt(search)) {
+				String deviceType = "";
+				String additionalInfo = "";
+
+				if (product instanceof Keyboard) {
+					Keyboard keyboard = (Keyboard) product;
+					deviceType = keyboard.getDeviceType().toString();
+					additionalInfo = keyboard.getAdditionalInfo().toString();
+				} else if (product instanceof Mouse) {
+					Mouse mouse = (Mouse) product;
+					deviceType = mouse.getDeviceType().toString();
+					additionalInfo = Integer.toString(mouse.getAdditionalInfo());
+				}
+
+				model.addRow(new Object[] { product.getBarcode(), product.getCategory(), deviceType, product.getBrand(),
+						product.getColor(), product.getConnectivity(), product.getQuantityInStock(),
+						product.getRetailPrice(), additionalInfo });
+			}
+		}
+	}
+
+	public void miceSearch(JTable table, String search) {
+		if (!ErrorHandler.checkIfInputIsNumeric(search)) {
+			return;
+		}
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0); // Clear existing data
+
+		for (Product product : products) {
+			if (product instanceof Mouse) {
+				Mouse mouse = (Mouse) product;
+				if (mouse.getAdditionalInfo() == Integer.parseInt(search)) {
+					String deviceType = mouse.getDeviceType().toString();
+					String additionalInfo = Integer.toString(mouse.getAdditionalInfo());
+
+					model.addRow(new Object[] { product.getBarcode(), product.getCategory(), deviceType,
+							product.getBrand(), product.getColor(), product.getConnectivity(),
+							product.getQuantityInStock(), product.getRetailPrice(), additionalInfo });
+				}
+			}
+
+		}
+	}
+
 }

@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 public class StockManager {
 	private List<Product> products = new ArrayList<>();
 	private String filePath;
@@ -77,7 +79,7 @@ public class StockManager {
 		} else {
 			return;
 		}
-		
+
 		int index = findProductIndexByBarcode(product.getBarcode());
 		if (index != -1) {
 			products.set(index, product); // Update existing product
@@ -86,7 +88,8 @@ public class StockManager {
 		}
 		sortProductsByPrice();
 		saveProducts();
-		JOptionPane.showMessageDialog(null, "Product successfully updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Product successfully updated!", "Success",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private int findProductIndexByBarcode(int barcode) {
