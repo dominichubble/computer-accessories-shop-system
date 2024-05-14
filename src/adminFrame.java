@@ -30,6 +30,7 @@ public class AdminFrame extends JFrame {
 	private JTextField costInput;
 	private JTextField priceInput;
 	private JTextField infoInput;
+private StockManager stockManager = new StockManager("data/Stock.txt");
 
 	/**
 	 * Launch the application.
@@ -147,48 +148,58 @@ public class AdminFrame extends JFrame {
 
 		JButton productEnter = new JButton("Submit");
 		productEnter.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
-        try {
-            // Validate that all required fields are filled
-            if (barcodeInput.getText().trim().isEmpty() ||
-                stockInput.getText().trim().isEmpty() ||
-                costInput.getText().trim().isEmpty() ||
-                priceInput.getText().trim().isEmpty() ||
-                brandInput.getText().trim().isEmpty() ||
-                colourInput.getText().trim().isEmpty() ||
-                infoInput.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "All fields must be filled.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+			public void actionPerformed(ActionEvent e) {
+				try {
+					// Validate that all required fields are filled
+					if (barcodeInput.getText().trim().isEmpty() || stockInput.getText().trim().isEmpty()
+							|| costInput.getText().trim().isEmpty() || priceInput.getText().trim().isEmpty()
+							|| brandInput.getText().trim().isEmpty() || colourInput.getText().trim().isEmpty()
+							|| infoInput.getText().trim().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "All fields must be filled.", "Input Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 
-            int barcode = Integer.parseInt(barcodeInput.getText().trim());
-            int stock = Integer.parseInt(stockInput.getText().trim());
-            double cost = Double.parseDouble(costInput.getText().trim());
-            double price = Double.parseDouble(priceInput.getText().trim());
-            String brand = brandInput.getText().trim();
-            String colour = colourInput.getText().trim();
-            DeviceType type = (DeviceType) typeInput.getSelectedItem();
-            ConnectivityType connectivity = (ConnectivityType) connectivityInput.getSelectedItem();
-			String additionalInfo = infoInput.getText().trim().toUpperCase();
-            ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
+					int barcode = Integer.parseInt(barcodeInput.getText().trim());
+					int stock = Integer.parseInt(stockInput.getText().trim());
+					double cost = Double.parseDouble(costInput.getText().trim());
+					double price = Double.parseDouble(priceInput.getText().trim());
+					String brand = brandInput.getText().trim().toUpperCase();
+					String colour = colourInput.getText().trim().toUpperCase();
+					DeviceType type = (DeviceType) typeInput.getSelectedItem();
+					ConnectivityType connectivity = (ConnectivityType) connectivityInput.getSelectedItem();
+					String additionalInfo = infoInput.getText().trim().toUpperCase();
+					ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
 
+					if (!ErrorHandler.checkIfBarcodeIs6Digits(barcode) || !ErrorHandler.checkIfBrandIsValid(brand)
+							|| !ErrorHandler.checkIfColorIsValid(colour)
+							|| !ErrorHandler.checkIfCostIsGreaterThanZero(cost)
+							|| !ErrorHandler.checkIfPriceIsGreaterThanZero(price)
+							|| (category == ProductCategory.KEYBOARD
+									&& !ErrorHandler.checkIfKeyboardAdditionalInfoIsValid(additionalInfo))
+							|| (category == ProductCategory.MOUSE
+									&& !ErrorHandler.checkIfMouseAdditionalInfoIsValid(additionalInfo))
+							|| !ErrorHandler.checkIfBarcodeIsPresent(barcode)) {
+						return;
+					}
 
-			if (!ErrorHandler.checkIfBarcodeIs6Digits(barcode) || !ErrorHandler.checkIfBrandIsValid(brand) || !ErrorHandler.checkIfColorIsValid(colour) || !ErrorHandler.checkIfCostIsGreaterThanZero(cost) || !ErrorHandler.checkIfPriceIsGreaterThanZero(price) || (category == ProductCategory.KEYBOARD && !ErrorHandler.checkIfKeyboardAdditionalInfoIsValid(additionalInfo)) || (category == ProductCategory.MOUSE && !ErrorHandler.checkIfMouseAdditionalInfoIsValid(additionalInfo))
-			|| !ErrorHandler.checkIfBarcodeIsPresent(barcode)) {	
-				return;
+					// Proceed to add or update the product
+
+					stockManager.addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type,
+							additionalInfo);
+					JOptionPane.showMessageDialog(null, "Product successfully updated!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null,
+							"Please enter valid numeric values for Barcode, Stock, Cost, and Price.",
+							"Number Format Error", JOptionPane.ERROR_MESSAGE);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Unexpected error: " + ex.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
-
-            // Proceed to add or update the product
-            addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category, type, additionalInfo);
-            JOptionPane.showMessageDialog(null, "Product successfully updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Please enter valid numeric values for Barcode, Stock, Cost, and Price.", "Number Format Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Unexpected error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-});
+		});
 
 		productEnter.setBounds(539, 208, 338, 58);
 		addProduct.add(productEnter);
@@ -243,24 +254,10 @@ public class AdminFrame extends JFrame {
 	public void populateTable() {
 		List<Product> products = StockReader.readStockFile("data/Stock.txt");
 		ProductManager productManager = new ProductManager();
-		productManager.populateTable(tblProducts, products);
+		productManager.adminPopulateTable(tblProducts, products);
 
 	}
 
-	public void addOrUpdateProduct(int barcode, String brand, String color, ConnectivityType connectivity, int quantity,
-			double cost, double price, ProductCategory category, DeviceType type, String additionalInfo) {
-		Product product;
-		if (category == ProductCategory.KEYBOARD) {
-			Layout layout = Layout.valueOf(additionalInfo.toUpperCase());
-			product = new Keyboard(barcode, brand, color, connectivity, quantity, cost, price, category, type, layout);
-		} else if (category == ProductCategory.MOUSE) {
-			int buttons = Integer.parseInt(additionalInfo);
-			product = new Mouse(barcode, brand, color, connectivity, quantity, cost, price, category, type, buttons);
-		} else {
-			return; // Optionally handle error or unsupported product types
-		}
-		StockManager stockManager = new StockManager("data/Stock.txt");
-		stockManager.addOrUpdateProduct(product);
-	}
+
 
 }

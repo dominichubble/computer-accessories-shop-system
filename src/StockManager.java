@@ -9,12 +9,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class StockManager {
-	private List<Product> products;
+	private List<Product> products = new ArrayList<>();
 	private String filePath;
 
 	public StockManager(String filePath) {
 		this.filePath = filePath;
-		this.products = new ArrayList<>();
 		loadProducts();
 	}
 
@@ -36,15 +35,15 @@ public class StockManager {
 		String[] data = line.split(", ");
 		if (data.length == 10) {
 			int barcode = Integer.parseInt(data[0]);
-			String category = data[1];
+			String category = data[1].toUpperCase();
 			DeviceType type = DeviceType.valueOf(data[2].toUpperCase());
-			String brand = data[3];
-			String color = data[4];
+			String brand = data[3].toUpperCase();
+			String color = data[4].toUpperCase();
 			ConnectivityType connectivity = ConnectivityType.valueOf(data[5].toUpperCase());
 			int quantity = Integer.parseInt(data[6]);
 			double cost = Double.parseDouble(data[7]);
 			double price = Double.parseDouble(data[8]);
-			String additionalInfo = data[9];
+			String additionalInfo = data[9].toUpperCase();
 
 			if ("keyboard".equalsIgnoreCase(category)) {
 				return new Keyboard(barcode, brand, color, connectivity, quantity, cost, price,
@@ -66,7 +65,19 @@ public class StockManager {
 		});
 	}
 
-	public void addOrUpdateProduct(Product product) {
+	public void addOrUpdateProduct(int barcode, String brand, String color, ConnectivityType connectivity, int quantity,
+			double cost, double price, ProductCategory category, DeviceType type, String additionalInfo) {
+		Product product;
+		if (category == ProductCategory.KEYBOARD) {
+			Layout layout = Layout.valueOf(additionalInfo.toUpperCase());
+			product = new Keyboard(barcode, brand, color, connectivity, quantity, cost, price, category, type, layout);
+		} else if (category == ProductCategory.MOUSE) {
+			int buttons = Integer.parseInt(additionalInfo);
+			product = new Mouse(barcode, brand, color, connectivity, quantity, cost, price, category, type, buttons);
+		} else {
+			return;
+		}
+		
 		int index = findProductIndexByBarcode(product.getBarcode());
 		if (index != -1) {
 			products.set(index, product); // Update existing product
