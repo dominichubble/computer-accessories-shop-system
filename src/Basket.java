@@ -12,8 +12,9 @@ public class Basket {
         return items;
     }
 
-    public void removeItem(Product product) {
-        items.removeIf(itemList -> !itemList.isEmpty() && itemList.get(0).equals(product));
+    public void remove(List<Product> productList) {
+        items.remove(productList);
+
     }
 
 }

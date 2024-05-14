@@ -121,22 +121,18 @@ public class CustomerFrame extends JFrame {
 		JButton btnAddToBasket = new JButton("Add To Basket");
 		btnAddToBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if (barcodeInput.getText().isEmpty() || quantityInput.getText().isEmpty()) {
-						JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
-								JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					int barcode = Integer.parseInt(barcodeInput.getText());
-					int quantity = Integer.parseInt(quantityInput.getText());
-					double price = StockReader.getPrice(barcode);
 
-					products = basketManager.addItem(products, barcode, quantity);
-					productManager.populateTable(tblProducts, products);
-
-				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
+				if (barcodeInput.getText().isEmpty() || quantityInput.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
 				}
+				int barcode = Integer.parseInt(barcodeInput.getText());
+				int quantity = Integer.parseInt(quantityInput.getText());
+
+				products = basketManager.addItem(products, barcode, quantity);
+				productManager.populateTable(tblProducts, products);
+
 			}
 		});
 		btnAddToBasket.setBounds(10, 344, 107, 23);
@@ -154,20 +150,7 @@ public class CustomerFrame extends JFrame {
 		JButton btnViewBasket = new JButton("View Basket");
 		btnViewBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (basketManager.getItems().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				String basketItems = "";
-				for (List<Product> productList : basketManager.getItems()) {
-					if (!productList.isEmpty()) {
-						Product product = productList.get(0);
-						basketItems += product.getBarcode() + " - " + product.getBrand() + " - "
-								+ product.getRetailPrice() + " - " + productList.size() + " in basket\n";
-					}
-				}
-				JOptionPane.showMessageDialog(null, basketItems, "Basket", JOptionPane.INFORMATION_MESSAGE);
-
+				basketManager.viewBasket();
 			}
 		});
 		btnViewBasket.setBounds(10, 378, 107, 23);
@@ -296,43 +279,13 @@ public class CustomerFrame extends JFrame {
 		JButton btnRemove = new JButton("Remove");
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Remove item from basket
-				try {
-					if (removeItemBarcorde.getText().isEmpty() || removeQuantityInput.getText().isEmpty()) {
-						JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
-								JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					int barcode = Integer.parseInt(removeItemBarcorde.getText());
-					int quantity = Integer.parseInt(removeQuantityInput.getText());
-
-					// check if barcode is 6 digits
-					if (barcode < 100000 || barcode > 999999) {
-						JOptionPane.showMessageDialog(null, "Barcode must be 6 digits!", "Error",
-								JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					// Remove item from basket
-					for (Product product : products) {
-						if (product.getBarcode() == barcode) {
-							List<Product> productList = basketManager.getItems().stream()
-									.filter(itemList -> !itemList.isEmpty() && itemList.get(0).equals(product))
-									.findFirst().orElse(null);
-							if (productList != null) {
-								for (int i = 0; i < quantity; i++) {
-									productList.remove(product);
-									product.setQuantityInStock(product.getQuantityInStock() + 1);
-								}
-							}
-						}
-					}
-					javax.swing.JOptionPane.showMessageDialog(null, "Item removed from basket", "Success",
-							javax.swing.JOptionPane.INFORMATION_MESSAGE);
-					productManager.populateTable(tblProducts, products);
-
-				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(null, "Invalid input!", "Error", JOptionPane.ERROR_MESSAGE);
+				if (removeItemBarcorde.getText().isEmpty() || removeQuantityInput.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
 				}
+				int barcode = Integer.parseInt(removeItemBarcorde.getText());
+				int quantity = Integer.parseInt(removeQuantityInput.getText());
+				basketManager.removeItem(products, barcode, quantity);
 
 			}
 		});
@@ -435,18 +388,7 @@ public class CustomerFrame extends JFrame {
 		JButton btnViewBskt = new JButton("View Basket");
 		btnViewBskt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DefaultTableModel model = (DefaultTableModel) basketTable.getModel();
-				model.setRowCount(0); // Clear existing data
-
-				for (List<Product> productList : basketManager.getItems()) {
-					if (!productList.isEmpty()) {
-						Product product = productList.get(0);
-						model.addRow(
-								new Object[] { product.getBarcode(), productList.size(), product.getRetailPrice() });
-					} else {
-						JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
-					}
-				}
+				basketManager.populateTable(basketTable);
 // change txtTotalValue to the total price of the basket
 				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}
