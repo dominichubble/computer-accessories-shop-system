@@ -106,17 +106,25 @@ public class CustomerFrame extends JFrame {
 		panelShop.add(btnView);
 
 		JLabel txtAddProduct = new JLabel("Add Product");
-		txtAddProduct.setBounds(20, 251, 73, 14);
+		txtAddProduct.setBounds(10, 250, 73, 14);
 		panelShop.add(txtAddProduct);
 
 		barcodeInput = new JTextField();
-		barcodeInput.setBounds(10, 276, 86, 20);
+		barcodeInput.setBounds(110, 276, 86, 20);
 		panelShop.add(barcodeInput);
 		barcodeInput.setColumns(10);
 
-		JLabel txtInsertBarcode = new JLabel("(insert barcode)");
-		txtInsertBarcode.setBounds(106, 279, 89, 14);
-		panelShop.add(txtInsertBarcode);
+		JLabel txtAddItemBarcodeInput = new JLabel("Barcode");
+		txtAddItemBarcodeInput.setBounds(10, 276, 89, 14);
+		panelShop.add(txtAddItemBarcodeInput);
+
+		JPanel panelCheckout = new JPanel();
+		tabbedPane.addTab("Checkout", null, panelCheckout, null);
+		panelCheckout.setLayout(null);
+
+		JLabel txtTotalValue = new JLabel("0.00");
+		txtTotalValue.setBounds(348, 231, 46, 14);
+		panelCheckout.add(txtTotalValue);
 
 		JButton btnAddToBasket = new JButton("Add To Basket");
 		btnAddToBasket.addActionListener(new ActionListener() {
@@ -135,17 +143,17 @@ public class CustomerFrame extends JFrame {
 
 			}
 		});
-		btnAddToBasket.setBounds(10, 344, 107, 23);
+		btnAddToBasket.setBounds(110, 344, 135, 23);
 		panelShop.add(btnAddToBasket);
 
 		quantityInput = new JTextField();
-		quantityInput.setBounds(10, 307, 86, 20);
+		quantityInput.setBounds(110, 298, 86, 20);
 		panelShop.add(quantityInput);
 		quantityInput.setColumns(10);
 
-		JLabel txtInsertQuantity = new JLabel("(insert quantity)");
-		txtInsertQuantity.setBounds(106, 310, 89, 14);
-		panelShop.add(txtInsertQuantity);
+		JLabel txtAddItemQuantity = new JLabel("Quantity");
+		txtAddItemQuantity.setBounds(10, 301, 89, 14);
+		panelShop.add(txtAddItemQuantity);
 
 		JButton btnViewBasket = new JButton("View Basket");
 		btnViewBasket.addActionListener(new ActionListener() {
@@ -153,7 +161,7 @@ public class CustomerFrame extends JFrame {
 				basketManager.viewBasket();
 			}
 		});
-		btnViewBasket.setBounds(10, 378, 107, 23);
+		btnViewBasket.setBounds(110, 378, 135, 23);
 		panelShop.add(btnViewBasket);
 
 		JButton btnClearBasket = new JButton("Clear Basket");
@@ -163,20 +171,20 @@ public class CustomerFrame extends JFrame {
 				productManager.populateTable(tblProducts, products);
 			}
 		});
-		btnClearBasket.setBounds(10, 412, 107, 23);
+		btnClearBasket.setBounds(110, 412, 135, 23);
 		panelShop.add(btnClearBasket);
 
 		JLabel txtFindItem = new JLabel("Find Item");
-		txtFindItem.setBounds(290, 251, 46, 14);
+		txtFindItem.setBounds(260, 250, 96, 14);
 		panelShop.add(txtFindItem);
 
 		JLabel txtRemoveBarcode_1 = new JLabel("Barcode");
-		txtRemoveBarcode_1.setBounds(259, 279, 46, 14);
+		txtRemoveBarcode_1.setBounds(260, 276, 96, 14);
 		panelShop.add(txtRemoveBarcode_1);
 
 		barcodeSearchInput = new JTextField();
 		barcodeSearchInput.setColumns(10);
-		barcodeSearchInput.setBounds(315, 276, 86, 20);
+		barcodeSearchInput.setBounds(360, 276, 86, 20);
 		panelShop.add(barcodeSearchInput);
 
 		JButton btnFastSearch = new JButton("Search");
@@ -185,19 +193,19 @@ public class CustomerFrame extends JFrame {
 				productManager.fastSearch(tblProducts, barcodeSearchInput.getText());
 			}
 		});
-		btnFastSearch.setBounds(315, 348, 89, 23);
+		btnFastSearch.setBounds(360, 344, 89, 23);
 		panelShop.add(btnFastSearch);
 
 		JLabel numberOfMiceButtons = new JLabel("Number Of Mice Buttons");
-		numberOfMiceButtons.setBounds(518, 251, 129, 14);
+		numberOfMiceButtons.setBounds(510, 250, 186, 14);
 		panelShop.add(numberOfMiceButtons);
 
 		JLabel txtNumber = new JLabel("Number");
-		txtNumber.setBounds(497, 279, 46, 14);
+		txtNumber.setBounds(510, 276, 46, 14);
 		panelShop.add(txtNumber);
 
 		miceInput = new JTextField();
-		miceInput.setBounds(561, 276, 86, 20);
+		miceInput.setBounds(610, 276, 86, 20);
 		panelShop.add(miceInput);
 		miceInput.setColumns(10);
 
@@ -207,12 +215,8 @@ public class CustomerFrame extends JFrame {
 				productManager.miceSearch(tblProducts, miceInput.getText());
 			}
 		});
-		btnMiceSearch.setBounds(561, 348, 89, 23);
+		btnMiceSearch.setBounds(610, 344, 89, 23);
 		panelShop.add(btnMiceSearch);
-
-		JPanel panelCheckout = new JPanel();
-		tabbedPane.addTab("Checkout", null, panelCheckout, null);
-		panelCheckout.setLayout(null);
 
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(10, 11, 446, 209);
@@ -226,11 +230,11 @@ public class CustomerFrame extends JFrame {
 		basketTable.setModel(dtmBasketItems);
 
 		JLabel txtRemoveItem = new JLabel("Remove Item");
-		txtRemoveItem.setBounds(53, 306, 71, 14);
+		txtRemoveItem.setBounds(10, 231, 118, 14);
 		panelCheckout.add(txtRemoveItem);
 
 		removeItemBarcorde = new JTextField();
-		removeItemBarcorde.setBounds(94, 331, 86, 20);
+		removeItemBarcorde.setBounds(91, 253, 86, 20);
 		panelCheckout.add(removeItemBarcorde);
 		removeItemBarcorde.setColumns(10);
 
@@ -245,35 +249,36 @@ public class CustomerFrame extends JFrame {
 				int barcode = Integer.parseInt(removeItemBarcorde.getText());
 				int quantity = Integer.parseInt(removeQuantityInput.getText());
 				basketManager.removeItem(products, barcode, quantity);
-
+				basketManager.populateTable(basketTable);
+				txtTotalValue.setText(Double.toString(basketManager.getTotalPrice()));
 			}
 		});
-		btnRemove.setBounds(91, 403, 89, 23);
+		btnRemove.setBounds(91, 309, 89, 23);
 		panelCheckout.add(btnRemove);
 
 		JLabel txtPayPal = new JLabel("PayPal");
-		txtPayPal.setBounds(550, 27, 46, 14);
+		txtPayPal.setBounds(780, 191, 46, 14);
 		panelCheckout.add(txtPayPal);
 
-		JLabel txtTotal = new JLabel("Total: ");
-		txtTotal.setBounds(309, 231, 46, 14);
+		JLabel txtTotal = new JLabel("Total:");
+		txtTotal.setBounds(309, 231, 74, 14);
 		panelCheckout.add(txtTotal);
 
 		emailInput = new JTextField();
-		emailInput.setBounds(560, 52, 86, 20);
+		emailInput.setBounds(838, 219, 86, 20);
 		panelCheckout.add(emailInput);
 		emailInput.setColumns(10);
 
 		JLabel txtEmail = new JLabel("Email: ");
-		txtEmail.setBounds(504, 55, 46, 14);
+		txtEmail.setBounds(700, 219, 125, 14);
 		panelCheckout.add(txtEmail);
 
 		JLabel txtCreditCard = new JLabel("Credit Card");
-		txtCreditCard.setBounds(796, 27, 62, 14);
+		txtCreditCard.setBounds(780, 27, 101, 14);
 		panelCheckout.add(txtCreditCard);
 
 		JLabel txtCardNumber = new JLabel("Card Number:");
-		txtCardNumber.setBounds(757, 55, 71, 14);
+		txtCardNumber.setBounds(700, 52, 142, 14);
 		panelCheckout.add(txtCardNumber);
 
 		creditCardInput = new JTextField();
@@ -287,7 +292,7 @@ public class CustomerFrame extends JFrame {
 		securityNumberInput.setColumns(10);
 
 		JLabel txtSecurityNumber = new JLabel("Security Number:");
-		txtSecurityNumber.setBounds(742, 86, 86, 14);
+		txtSecurityNumber.setBounds(700, 83, 142, 14);
 		panelCheckout.add(txtSecurityNumber);
 
 		JButton btnPayPalPay = new JButton("Buy Now");
@@ -308,7 +313,7 @@ public class CustomerFrame extends JFrame {
 				productManager.populateTable(tblProducts, products);
 			}
 		});
-		btnPayPalPay.setBounds(560, 135, 89, 23);
+		btnPayPalPay.setBounds(838, 271, 89, 23);
 		panelCheckout.add(btnPayPalPay);
 
 		JButton btnCreditCardPay = new JButton("Buy Now");
@@ -319,7 +324,8 @@ public class CustomerFrame extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				if (!ErrorHandler.checkIfCreditCardIsValid(creditCardInput.getText())|| !ErrorHandler.checkIfSecurityNumberIsValid(securityNumberInput.getText())		) {
+				if (!ErrorHandler.checkIfCreditCardIsValid(creditCardInput.getText())
+						|| !ErrorHandler.checkIfSecurityNumberIsValid(securityNumberInput.getText())) {
 					return;
 				}
 
@@ -328,12 +334,8 @@ public class CustomerFrame extends JFrame {
 				productManager.populateTable(tblProducts, products);
 			}
 		});
-		btnCreditCardPay.setBounds(835, 135, 89, 23);
+		btnCreditCardPay.setBounds(838, 135, 89, 23);
 		panelCheckout.add(btnCreditCardPay);
-
-		JLabel txtTotalValue = new JLabel("");
-		txtTotalValue.setBounds(348, 231, 46, 14);
-		panelCheckout.add(txtTotalValue);
 
 		JButton btnViewBskt = new JButton("View Basket");
 		btnViewBskt.addActionListener(new ActionListener() {
@@ -343,19 +345,19 @@ public class CustomerFrame extends JFrame {
 			}
 
 		});
-		btnViewBskt.setBounds(10, 227, 89, 23);
+		btnViewBskt.setBounds(466, 11, 142, 72);
 		panelCheckout.add(btnViewBskt);
 
 		JLabel txtRemoveBarcode = new JLabel("Barcode");
-		txtRemoveBarcode.setBounds(23, 334, 46, 14);
+		txtRemoveBarcode.setBounds(10, 256, 74, 14);
 		panelCheckout.add(txtRemoveBarcode);
 
 		JLabel txtQuantity = new JLabel("Quantity");
-		txtQuantity.setBounds(23, 375, 46, 14);
+		txtQuantity.setBounds(10, 281, 74, 14);
 		panelCheckout.add(txtQuantity);
 
 		removeQuantityInput = new JTextField();
-		removeQuantityInput.setBounds(94, 372, 86, 20);
+		removeQuantityInput.setBounds(91, 278, 86, 20);
 		panelCheckout.add(removeQuantityInput);
 		removeQuantityInput.setColumns(10);
 

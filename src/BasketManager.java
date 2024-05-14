@@ -15,9 +15,10 @@ public class BasketManager {
 	public List<Product> addItem(List<Product> products, int barcode, int quantity) {
 		try {
 
-			//error handling
+			// error handling
 			if (!ErrorHandler.checkIfBarcodeExists(barcode) || !ErrorHandler.checkIfQuantityIsGreaterThanZero(quantity)
-					|| !ErrorHandler.checkIfBarcodeIs6Digits(barcode) || !ErrorHandler.checkIfQuantityIsInStock(barcode, quantity)){
+					|| !ErrorHandler.checkIfBarcodeIs6Digits(barcode)
+					|| !ErrorHandler.checkIfQuantityIsInStock(products, barcode, quantity)) {
 				return products;
 			}
 
@@ -29,6 +30,7 @@ public class BasketManager {
 						itemList.add(itemList.get(0));
 						itemList.get(0).setQuantityInStock(itemList.get(0).getQuantityInStock() - 1);
 					}
+					JOptionPane.showMessageDialog(null, "Item added to basket", "Success", JOptionPane.INFORMATION_MESSAGE);
 					return products;
 				}
 			}
@@ -54,9 +56,9 @@ public class BasketManager {
 
 	public void removeItem(List<Product> products, int barcode, int quantity) {
 		try {
-			//error handling
+			// error handling
 			if (!ErrorHandler.checkIfBarcodeExists(barcode) || !ErrorHandler.checkIfQuantityIsGreaterThanZero(quantity)
-					|| !ErrorHandler.checkIfBarcodeIs6Digits(barcode)){
+					|| !ErrorHandler.checkIfBarcodeIs6Digits(barcode)) {
 				return;
 			}
 			// check if the product is in the basket
@@ -83,7 +85,7 @@ public class BasketManager {
 	}
 
 	public void clearBasket() {
-				if (ErrorHandler.checkIfBasketIsEmpty(basket.getItems()) == false) {
+		if (ErrorHandler.checkIfBasketIsEmpty(basket.getItems()) == false) {
 			return;
 		}
 		// add the items back to the stock

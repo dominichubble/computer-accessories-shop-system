@@ -20,10 +20,16 @@ public class ErrorHandler {
 		return true;
 	}
 
-	public static Boolean checkIfQuantityIsInStock(int barcode, int quantity) {
-		if (StockReader.getQuantityInStock(barcode) < quantity) {
-			JOptionPane.showMessageDialog(null, "The quantity is not in stock", "Error", JOptionPane.ERROR_MESSAGE);
-			return false;
+	public static Boolean checkIfQuantityIsInStock(List<Product> products, int barcode, int quantity) {
+		for (Product product : products) {
+			if (product.getBarcode() == barcode) {
+				if (product.getQuantityInStock() < quantity) {
+					JOptionPane.showMessageDialog(null, "The quantity is not in stock", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return false;
+				}
+			}
+
 		}
 		return true;
 	}
@@ -98,40 +104,38 @@ public class ErrorHandler {
 		return true;
 	}
 
-    public static Boolean checkIfBarcodeIsPresent(int barcode) {
-        if (StockReader.checkIfBarcodeExists(barcode)) {
-            JOptionPane.showMessageDialog(null, "The barcode already exists", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
-    }
+	public static Boolean checkIfBarcodeIsPresent(int barcode) {
+		if (StockReader.checkIfBarcodeExists(barcode)) {
+			JOptionPane.showMessageDialog(null, "The barcode already exists", "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
 
-    public static Boolean checkIfInputIsNumeric(String input) {
-        if (!input.matches("^[0-9]*$")) {
-            JOptionPane.showMessageDialog(null, "The input must be numeric", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
-    }
+	public static Boolean checkIfInputIsNumeric(String input) {
+		if (!input.matches("^[0-9]*$")) {
+			JOptionPane.showMessageDialog(null, "The input must be numeric", "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
 
-    public static Boolean checkIfCreditCardIsValid(String creditCardNumber) {
-        if (!creditCardNumber.matches("^[0-9]{6}$")) {
-            JOptionPane.showMessageDialog(null, "The credit card number must be 6 digits", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
-    }
+	public static Boolean checkIfCreditCardIsValid(String creditCardNumber) {
+		if (!creditCardNumber.matches("^[0-9]{6}$")) {
+			JOptionPane.showMessageDialog(null, "The credit card number must be 6 digits", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
 
-    public static Boolean checkIfSecurityNumberIsValid(String securityNumber) {
-        if (!securityNumber.matches("^[0-9]{3}$")) {
-            JOptionPane.showMessageDialog(null, "The security number must be 3 digits", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
-    }
-
-
+	public static Boolean checkIfSecurityNumberIsValid(String securityNumber) {
+		if (!securityNumber.matches("^[0-9]{3}$")) {
+			JOptionPane.showMessageDialog(null, "The security number must be 3 digits", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
 
 }

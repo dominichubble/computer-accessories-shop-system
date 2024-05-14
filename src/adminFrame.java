@@ -31,8 +31,8 @@ public class AdminFrame extends JFrame {
 	private JTextField priceInput;
 	private JTextField infoInput;
 	private StockManager stockManager = new StockManager("data/Stock.txt");
-			private List<Product> products = StockReader.readStockFile("data/Stock.txt");
-		private ProductManager productManager = new ProductManager();
+	private List<Product> products = StockReader.readStockFile("data/Stock.txt");
+	private ProductManager productManager = new ProductManager();
 
 	/**
 	 * Launch the application.
@@ -205,7 +205,7 @@ public class AdminFrame extends JFrame {
 		addProduct.add(productEnter);
 
 		JLabel txtBarcode = new JLabel("Barcode");
-		txtBarcode.setBounds(21, 26, 46, 14);
+		txtBarcode.setBounds(10, 26, 67, 14);
 		addProduct.add(txtBarcode);
 
 		JLabel txtType = new JLabel("Type");
@@ -221,19 +221,19 @@ public class AdminFrame extends JFrame {
 		addProduct.add(txtStock);
 
 		JLabel txtRetailPrice = new JLabel("Price");
-		txtRetailPrice.setBounds(21, 230, 46, 14);
+		txtRetailPrice.setBounds(10, 230, 67, 14);
 		addProduct.add(txtRetailPrice);
 
 		JLabel txtCategory = new JLabel("Category");
-		txtCategory.setBounds(233, 29, 46, 14);
+		txtCategory.setBounds(224, 29, 87, 14);
 		addProduct.add(txtCategory);
 
 		JLabel txtBrand = new JLabel("Brand");
-		txtBrand.setBounds(21, 131, 46, 14);
+		txtBrand.setBounds(10, 131, 67, 14);
 		addProduct.add(txtBrand);
 
 		JLabel txtConnectivity = new JLabel("Connectivity");
-		txtConnectivity.setBounds(237, 131, 64, 14);
+		txtConnectivity.setBounds(224, 131, 87, 14);
 		addProduct.add(txtConnectivity);
 
 		JLabel txrOriginalCost = new JLabel("Cost");
@@ -246,11 +246,9 @@ public class AdminFrame extends JFrame {
 		infoInput.setColumns(10);
 
 		JLabel txtInfo = new JLabel("Info");
-		txtInfo.setBounds(268, 230, 46, 14);
+		txtInfo.setBounds(224, 230, 87, 14);
 		addProduct.add(txtInfo);
 
 	}
-
-
 
 }
