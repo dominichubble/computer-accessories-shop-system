@@ -14,20 +14,10 @@ public class BasketManager {
 
 	public List<Product> addItem(List<Product> products, int barcode, int quantity) {
 		try {
-			// check if the barcode exists
-			if (!StockReader.checkIfBarcodeExists(barcode)) {
-				JOptionPane.showMessageDialog(null, "The barcode does not exist", "Error", JOptionPane.ERROR_MESSAGE);
-				return products;
-			}
-			// check if the quantity is greater than 0
-			if (quantity <= 0) {
-				JOptionPane.showMessageDialog(null, "The quantity must be greater than 0", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				return products;
-			}
-			// check if the quantity is in stock
-			if (StockReader.getQuantityInStock(barcode) < quantity) {
-				JOptionPane.showMessageDialog(null, "The quantity is not in stock", "Error", JOptionPane.ERROR_MESSAGE);
+
+			//error handling
+			if (!ErrorHandler.checkIfBarcodeExists(barcode) || !ErrorHandler.checkIfQuantityIsGreaterThanZero(quantity)
+					|| !ErrorHandler.checkIfBarcodeIs6Digits(barcode) || !ErrorHandler.checkIfQuantityIsInStock(barcode, quantity)){
 				return products;
 			}
 
@@ -64,20 +54,9 @@ public class BasketManager {
 
 	public void removeItem(List<Product> products, int barcode, int quantity) {
 		try {
-			// check if the barcode exists
-			if (!StockReader.checkIfBarcodeExists(barcode)) {
-				JOptionPane.showMessageDialog(null, "The barcode does not exist", "Error", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			// check if the quantity is greater than 0
-			if (quantity <= 0) {
-				JOptionPane.showMessageDialog(null, "The quantity must be greater than 0", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			// check if barcode is 6 digits
-			if (String.valueOf(barcode).length() != 6) {
-				JOptionPane.showMessageDialog(null, "The barcode must be 6 digits", "Error", JOptionPane.ERROR_MESSAGE);
+			//error handling
+			if (!ErrorHandler.checkIfBarcodeExists(barcode) || !ErrorHandler.checkIfQuantityIsGreaterThanZero(quantity)
+					|| !ErrorHandler.checkIfBarcodeIs6Digits(barcode)){
 				return;
 			}
 			// check if the product is in the basket
@@ -104,8 +83,7 @@ public class BasketManager {
 	}
 
 	public void clearBasket() {
-		if (basket.getItems().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Basket is already empty!", "Error", JOptionPane.ERROR_MESSAGE);
+				if (ErrorHandler.checkIfBasketIsEmpty(basket.getItems()) == false) {
 			return;
 		}
 		// add the items back to the stock
@@ -139,8 +117,7 @@ public class BasketManager {
 	}
 
 	public void viewBasket() {
-		if (basket.getItems().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Basket is empty", "Error", JOptionPane.ERROR_MESSAGE);
+		if (ErrorHandler.checkIfBasketIsEmpty(basket.getItems()) == false) {
 			return;
 		}
 		for (List<Product> itemList : basket.getItems()) {
@@ -159,8 +136,7 @@ public class BasketManager {
 	}
 
 	public void populateTable(JTable basketTable) {
-		if (basket.getItems().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Basket is empty", "Error", JOptionPane.ERROR_MESSAGE);
+		if (ErrorHandler.checkIfBasketIsEmpty(basket.getItems()) == false) {
 			return;
 		}
 		DefaultTableModel model = (DefaultTableModel) basketTable.getModel();
@@ -172,6 +148,17 @@ public class BasketManager {
 				model.addRow(new Object[] { product.getBarcode(), productList.size(), product.getRetailPrice() });
 			}
 		}
+
+	}
+
+	public void buyItems(PaymentMethod paymentMethod, Address address) {
+		// check is basket is empty
+		if (ErrorHandler.checkIfBasketIsEmpty(basket.getItems()) == false) {
+			return;
+		}
+		Receipt receipt = paymentMethod.processPayment(getTotalPrice(), address);
+		JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt", JOptionPane.INFORMATION_MESSAGE);
+		soldItems();
 
 	}
 

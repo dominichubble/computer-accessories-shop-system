@@ -334,24 +334,18 @@ public class CustomerFrame extends JFrame {
 		JButton btnPayPalPay = new JButton("Buy Now");
 		btnPayPalPay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (basketManager.getItems().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
 				if (emailInput.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				PaymentMethod payPal = new PayPal(emailInput.getText());
+				
 				if (!emailInput.getText().contains("@")) {
 					JOptionPane.showMessageDialog(null, "Invalid email!", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				Receipt receipt = payPal.processPayment(basketManager.getTotalPrice(), user.getAddress());
-				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt",
-						JOptionPane.INFORMATION_MESSAGE);
-				basketManager.soldItems();
+				PaymentMethod payPal = new PayPal(emailInput.getText());
+				basketManager.buyItems(payPal, user.getAddress());
 				productManager.populateTable(tblProducts, products);
 			}
 		});
@@ -361,20 +355,26 @@ public class CustomerFrame extends JFrame {
 		JButton btnCreditCardPay = new JButton("Buy Now");
 		btnCreditCardPay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (basketManager.getItems().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Basket is empty!", "Error", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
 				if (creditCardInput.getText().isEmpty() || securityNumberInput.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				// check is the credit card number is 6 digits
+				if (creditCardInput.getText().length() != 6) {
+					JOptionPane.showMessageDialog(null, "The credit card number must be 6 digits", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				// check is the security number is 3 digits
+				if (securityNumberInput.getText().length() != 3) {
+					JOptionPane.showMessageDialog(null, "The security number must be 3 digits", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
 				PaymentMethod creditCard = new CreditCard(creditCardInput.getText(), securityNumberInput.getText());
-				Receipt receipt = creditCard.processPayment(basketManager.getTotalPrice(), user.getAddress());
-				JOptionPane.showMessageDialog(null, receipt.getReceiptTxt(), "Receipt",
-						JOptionPane.INFORMATION_MESSAGE);
-				basketManager.soldItems();
+				basketManager.buyItems(creditCard, user.getAddress());
 				productManager.populateTable(tblProducts, products);
 			}
 		});
