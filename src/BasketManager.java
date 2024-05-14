@@ -80,9 +80,7 @@ public class BasketManager {
 							JOptionPane.INFORMATION_MESSAGE);
 					break;
 				}
-				else {
-					JOptionPane.showMessageDialog(null, "The item is not in the basket", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+					
 			}
 
 		} catch (Exception e) {
