@@ -106,7 +106,7 @@ public class CustomerFrame extends JFrame {
 		btnView.setBounds(884, 11, 89, 72);
 		panelShop.add(btnView);
 
-		JLabel txtAddProduct = new JLabel("Add Product");
+		JLabel txtAddProduct = new JLabel("Add Product to Basket");
 		txtAddProduct.setBounds(10, 250, 73, 14);
 		panelShop.add(txtAddProduct);
 

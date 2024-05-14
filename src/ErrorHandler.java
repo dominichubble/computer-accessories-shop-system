@@ -138,4 +138,12 @@ public class ErrorHandler {
 		return true;
 	}
 
+	public static Boolean checkIfStockIsGreaterThanZero(int stock) {
+		if (stock <= 0) {
+			JOptionPane.showMessageDialog(null, "The stock must be greater than 0", "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
+
 }

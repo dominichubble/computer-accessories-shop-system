@@ -181,7 +181,8 @@ public class AdminFrame extends JFrame {
 									&& !ErrorHandler.checkIfKeyboardAdditionalInfoIsValid(additionalInfo))
 							|| (category == ProductCategory.MOUSE
 									&& !ErrorHandler.checkIfMouseAdditionalInfoIsValid(additionalInfo))
-							|| !ErrorHandler.checkIfBarcodeIsPresent(barcode)) {
+							|| !ErrorHandler.checkIfBarcodeIsPresent(barcode)
+							|| !ErrorHandler.checkIfStockIsGreaterThanZero(stock)) {
 						return;
 					}
 
@@ -189,6 +190,9 @@ public class AdminFrame extends JFrame {
 
 					stockManager.addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category,
 							type, additionalInfo);
+					products = StockReader.readStockFile("data/Stock.txt");
+					productManager.adminPopulateTable(tblProducts, products);
+					
 
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null,
