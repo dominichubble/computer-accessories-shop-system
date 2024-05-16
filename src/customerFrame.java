@@ -130,7 +130,7 @@ public class CustomerFrame extends JFrame {
 		JButton btnAddToBasket = new JButton("Add To Basket");
 		btnAddToBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				// Check if the fields are empty
 				if (barcodeInput.getText().isEmpty() || quantityInput.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please fill in all fields!", "Error",
 							JOptionPane.ERROR_MESSAGE);

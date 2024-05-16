@@ -96,6 +96,7 @@ public class AdminFrame extends JFrame {
 		JButton btnView = new JButton("View");
 		btnView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Populate the table with the products
 				productManager.adminPopulateTable(tblProducts, products);
 			}
 		});
@@ -173,6 +174,7 @@ public class AdminFrame extends JFrame {
 					String additionalInfo = infoInput.getText().trim().toUpperCase();
 					ProductCategory category = (ProductCategory) categoryInput.getSelectedItem();
 
+					// Validate the input
 					if (!ErrorHandler.checkIfBarcodeIs6Digits(barcode) || !ErrorHandler.checkIfBrandIsValid(brand)
 							|| !ErrorHandler.checkIfColorIsValid(colour)
 							|| !ErrorHandler.checkIfCostIsGreaterThanZero(cost)
@@ -187,7 +189,6 @@ public class AdminFrame extends JFrame {
 					}
 
 					// Proceed to add or update the product
-
 					stockManager.addOrUpdateProduct(barcode, brand, colour, connectivity, stock, cost, price, category,
 							type, additionalInfo);
 					products = StockReader.readStockFile("data/Stock.txt");
